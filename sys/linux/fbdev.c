@@ -163,7 +163,7 @@ static void plain_init()
 	fb.w = 400; //vi.xres;
 	fb.h = 288; //vi.yres;
 	fb.pelsize = 4; //(vi.bits_per_pixel+7)>>3;
-	fb.pitch = vi.xres_virtual * fb.pelsize;
+	fb.pitch = 400 * fb.pelsize;
 	fb.indexed = fi.visual == FB_VISUAL_PSEUDOCOLOR;
 
 	fb.cc[0].r = 8 - vi.red.length;
