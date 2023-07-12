@@ -206,15 +206,18 @@ void vid_init()
 	ioctl(fbfd, FBIOGET_VSCREENINFO, &vi);
 	ioctl(fbfd, FBIOGET_FSCREENINFO, &fi);
 
-	if (!vmode[0] || !vmode[1])
-	{
-		int scale = rc_getint("scale");
-		if (scale < 1) scale = 1;
-		vmode[0] = 160 * scale;
-		vmode[1] = 144 * scale;
-	}
-	if (vmode[0] > vi.xres) vmode[0] = vi.xres;
-	if (vmode[1] > vi.yres) vmode[1] = vi.yres;
+	// if (!vmode[0] || !vmode[1])
+	// {
+	// 	int scale = rc_getint("scale");
+	// 	if (scale < 1) scale = 1;
+	// 	vmode[0] = 160 * scale;
+	// 	vmode[1] = 144 * scale;
+	// }
+	// if (vmode[0] > vi.xres) vmode[0] = vi.xres;
+	// if (vmode[1] > vi.yres) vmode[1] = vi.yres;
+	
+	vmode[0] = 400;
+	vmode[1] = 240;
 	
 	mmio = mmap(0, fi.mmio_len, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, fi.smem_len);
 	if ((long)mmio == -1) mmio = 0;
