@@ -100,7 +100,7 @@ void menu_initpage(enum menu_page page) {
 		ezmenu_setlines(&ezm, (void*)loaderr_menu_items, 1);
 		break;
 	case mp_main:
-		ezmenu_setheader(&ezm, "GNUBOY MAIN MENU");
+		ezmenu_setheader(&ezm, "Beepboy Main Menu");
 		ezmenu_setlines(&ezm, (void*)main_menu_items, sizeof(main_menu_items)/sizeof(main_menu_items[0]));
 		ezmenu_setfooter(&ezm, " ");
 		break;
@@ -118,7 +118,7 @@ void menu_initpage(enum menu_page page) {
 			page = mp_loaderr;
 			goto loaderr;
 		}
-		ezmenu_setheader(&ezm, "GNUBOY ROM Selection");
+		ezmenu_setheader(&ezm, "Beepboy ROM Selection");
 		ezmenu_setfooter(&ezm, " ");
 		dirlist = malloc(sizeof(char*));
 		dirlist[0] = strdup("..");
