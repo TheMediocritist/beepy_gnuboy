@@ -577,7 +577,7 @@ void lcd_begin()
 	while (scale * 160 > fb.w || scale * 144 > fb.h) scale--;
 	vdest = fb.ptr + ((fb.w*fb.pelsize)>>1)
 		- (80*fb.pelsize) * scale
-		+ ((fb.h>>1) - 72*scale) * fb.pitch;
+		+ ((fb.h>>1) - 72 * scale) * fb.pitch;
 	WY = R_WY;
 }
 
