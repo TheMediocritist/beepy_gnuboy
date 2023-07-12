@@ -161,7 +161,7 @@ static void overlay_init()
 static void plain_init()
 {
 	fb.w = 400; //vi.xres;
-	fb.h = 288; //vi.yres;
+	fb.h = 240; //vi.yres;
 	fb.pelsize = 4; //(vi.bits_per_pixel+7)>>3;
 	fb.pitch = 400 * fb.pelsize;
 	fb.indexed = fi.visual == FB_VISUAL_PSEUDOCOLOR;
@@ -217,7 +217,7 @@ void vid_init()
 	// if (vmode[1] > vi.yres) vmode[1] = vi.yres;
 	
 	vmode[0] = 400;
-	vmode[1] = 288;
+	vmode[1] = 240;
 	
 	mmio = mmap(0, fi.mmio_len, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, fi.smem_len);
 	if ((long)mmio == -1) mmio = 0;
