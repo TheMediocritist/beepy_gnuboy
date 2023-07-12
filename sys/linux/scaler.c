@@ -77,3 +77,62 @@ void gb_upscale_320x240(uint32_t *to, uint32_t *from) {
 		from += 2*160/2;
 	}
 }
+
+/*
+    Upscale 160x144 -> 320x240 for 400x240 mode
+    Horizontal upscale:
+        320/160=2  --  simple doubling of pixels
+        [ab][cd] -> [aa][bb][cc][dd]
+    Vertical upscale:
+        Bresenham algo with simple interpolation
+*/
+
+
+void gb_upscale_320x240_for_400x240(uint32_t *dst, uint32_t *src)
+{
+    int midh = 240 / 2;
+    int Eh = 0;
+    int source = 0;
+    int dh = 0;
+    int i, j;
+
+	dst += (400-320)/4; // center correction for 400x240 mode
+
+    for (i = 0; i < 240; i++)
+    {
+        source = dh * 160 / 2; // gb x / 2 
+
+        for (j = 0; j < 320/8; j++)
+        {
+            uint32_t a, b, c, d, ab, cd;
+
+            __builtin_prefetch(dst + 4, 1);
+            __builtin_prefetch(src + source + 4, 0);
+
+            ab = src[source] & 0xF7DEF7DE;
+            cd = src[source + 1] & 0xF7DEF7DE;
+
+            #define AVERAGE(z, x) ((((z) & 0xF7DEF7DE) >> 1) + (((x) & 0xF7DEF7DE) >> 1))
+            if(Eh >= midh) { // average + 160
+                ab = AVERAGE(ab, src[source+160/2]);
+                cd = AVERAGE(cd, src[source+160/2+1]);
+            }
+            #undef AVERAGE
+
+            a = (ab & 0xFFFF) | (ab << 16);
+            b = (ab & 0xFFFF0000) | (ab >> 16);
+            c = (cd & 0xFFFF) | (cd << 16);
+            d = (cd & 0xFFFF0000) | (cd >> 16);
+
+            *dst++ = a;
+            *dst++ = b;
+            *dst++ = c;
+            *dst++ = d;
+
+            source += 2;
+
+        }
+        dst += (400-320)/2; // pitch correction for 480x272 mode
+        Eh += 144; if(Eh >= 240) { Eh -= 240; dh++; } // 144 - real gb y size
+    }
+}
