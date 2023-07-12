@@ -160,9 +160,9 @@ static void overlay_init()
 
 static void plain_init()
 {
-	fb.w = vi.xres;
-	fb.h = vi.yres;
-	fb.pelsize = (vi.bits_per_pixel+7)>>3;
+	fb.w = 400; //vi.xres;
+	fb.h = 240; //vi.yres;
+	fb.pelsize = 4; //(vi.bits_per_pixel+7)>>3;
 	fb.pitch = vi.xres_virtual * fb.pelsize;
 	fb.indexed = fi.visual == FB_VISUAL_PSEUDOCOLOR;
 
