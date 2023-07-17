@@ -231,7 +231,7 @@ void vid_init()
 	fb.dirty = 0;
 	fb.enabled = 1;
 
-	overlay_switch();
+	//overlay_switch();
 }
 
 void vid_close()
@@ -266,12 +266,12 @@ void vid_setpal(int i, int r, int g, int b)
 
 void vid_begin()
 {
-	overlay_switch();
+	//overlay_switch();
 }
 
 void vid_end()
 {
-	overlay_switch();
+	//overlay_switch();
 }
 
 void ev_poll(int wait)
