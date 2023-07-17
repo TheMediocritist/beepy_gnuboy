@@ -129,41 +129,41 @@ static void overlay_switch()
 
 static void overlay_init()
 {
-	if (!mmio | !use_yuv) return;
-	if (use_yuv < 0) if ((vmode[0] < 320) || (vmode[1] < 240)) return;
-	switch (fi.accel)
-	{
-#ifdef FB_ACCEL_MATROX_MGAG200
-	case FB_ACCEL_MATROX_MGAG200:
-#endif
-#ifdef FB_ACCEL_MATROX_MGAG400
-	case FB_ACCEL_MATROX_MGAG400:
-#endif
-		break;
-	default:
-		return;
-	}
-	fb.w = 160;
-	fb.h = 144;
-	fb.pitch = 640;
-	fb.pelsize = 4;
-	fb.yuv = 1;
-	fb.cc[0].r = fb.cc[1].r = fb.cc[2].r = fb.cc[3].r = 0;
-	fb.cc[0].l = 0;
-	fb.cc[1].l = 24;
-	fb.cc[2].l = 8;
-	fb.cc[3].l = 16;
-	base = vi.yres * vi.xres_virtual * ((vi.bits_per_pixel+7)>>3);
-	
-	maplen = base + fb.pitch * fb.h;
-}
+// 	if (!mmio | !use_yuv) return;
+// 	if (use_yuv < 0) if ((vmode[0] < 320) || (vmode[1] < 240)) return;
+// 	switch (fi.accel)
+// 	{
+// #ifdef FB_ACCEL_MATROX_MGAG200
+// 	case FB_ACCEL_MATROX_MGAG200:
+// #endif
+// #ifdef FB_ACCEL_MATROX_MGAG400
+// 	case FB_ACCEL_MATROX_MGAG400:
+// #endif
+// 		break;
+// 	default:
+// 		return;
+// 	}
+// 	fb.w = 160;
+// 	fb.h = 144;
+// 	fb.pitch = 640;
+// 	fb.pelsize = 4;
+// 	fb.yuv = 1;
+// 	fb.cc[0].r = fb.cc[1].r = fb.cc[2].r = fb.cc[3].r = 0;
+// 	fb.cc[0].l = 0;
+// 	fb.cc[1].l = 24;
+// 	fb.cc[2].l = 8;
+// 	fb.cc[3].l = 16;
+// 	base = vi.yres * vi.xres_virtual * ((vi.bits_per_pixel+7)>>3);
+// 	
+// 	maplen = base + fb.pitch * fb.h;
+// }
 
 static void plain_init()
 {
 	
-	fb.w = 200 * 2; // Scale the width by 2
-	fb.h = 240 * 2; // Scale the height by 2
-	fb.pitch = 400 * 2 * 2; // Scale the pitch by 2
+	fb.w = 400; 
+	fb.h = 240; 
+	fb.pitch = 400; 
 	fb.pelsize = 4;
 	fb.yuv = 1;
 	fb.cc[0].r = fb.cc[1].r = fb.cc[2].r = fb.cc[3].r = 0;
@@ -171,7 +171,7 @@ static void plain_init()
 	fb.cc[1].l = 24;
 	fb.cc[2].l = 8;
 	fb.cc[3].l = 16;
-	base = vi.yres_virtual * ((vi.bits_per_pixel + 7) >> 3) * 2; // Scale the base by 2
+	base = vi.yres_virtual * ((vi.bits_per_pixel + 7) >> 3);
 	
 	maplen = base + fb.pitch * fb.h;
 }
