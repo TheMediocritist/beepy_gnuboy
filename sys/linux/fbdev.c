@@ -215,7 +215,7 @@ static void framebuffer_copy()
 		// 	}
 		// }
 		
-		for (int row = source_y; row < source_y+source_height; row++)
+		for (int row = 40; row < 160; row++)
 		{
 			for (int b = 0; b < 400*4; b++)
 			{
