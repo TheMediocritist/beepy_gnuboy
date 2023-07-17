@@ -194,11 +194,11 @@ void vid_init()
 
 static void framebuffer_copy()
 	{
-			for (int row = 0; row < 240; row++)
+			for (int row = 60; row < 180; row++)
 			{
 				for (int b = 0; b < 400*4; b++)
 				{
-					fbmap[row*(400*4)+b] = new_fbmap[row*(400*4)+b];
+					fbmap[(row-60)*2*(400*4)+b] = new_fbmap[row*(400*4)+b];
 				}
 			}
 		
