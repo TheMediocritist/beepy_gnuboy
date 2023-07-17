@@ -238,6 +238,7 @@ void vid_setpal(int i, int r, int g, int b)
 void vid_begin()
 {
 	overlay_switch();
+	framebuffer_copy();
 }
 
 void vid_end()
