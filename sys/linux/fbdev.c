@@ -78,6 +78,7 @@
 	 if (bes) return;
 	 bes = 1;
 	 memset(new_fbmap, 0, maplen);
+}
 
 static void overlay_init()
 {
