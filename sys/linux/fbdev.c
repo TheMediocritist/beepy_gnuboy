@@ -217,10 +217,9 @@ static void framebuffer_copy()
 		
 		for (int row = 40; row < 160; row++)
 		{
-			for (int b = 0; b < 400*4; b++)
+			for (int col = 80; b < 240; b++)
 			{
-				fbmap[(row-60)*(400*4)+b] = new_fbmap[row*(400*4)+b];
-				fbmap[(row-59)*(400*4)+b] = new_fbmap[row*(400*4)+b];
+				fbmap[(400*row*2+40+b)*4] = new_fbmap[(400*row*+b)*4];
 			}
 		}
 		
