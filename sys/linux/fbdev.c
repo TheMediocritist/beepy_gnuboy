@@ -1,12 +1,3 @@
-
-/*
- * Support for the Linux framebuffer device
- * Copyright 2001 Laguna
- * MGA BES code derived from fbtv
- * Copyright Gerd Knorr
- * This file may be distributed under the terms of the GNU GPL.
- */
-
 #undef _GNU_SOURCE
 #define _GNU_SOURCE
 #include <string.h>
@@ -27,22 +18,20 @@
 
 struct fb fb;
 
-
-
 #define FBSET_CMD "fbset"
-static char *fb_mode;
+static char* fb_mode;
 static int fb_depth;
 static int vmode[3];
 
 #define FB_DEVICE "/dev/fb0"
-static char *fb_device;
+static char* fb_device;
 
 static int fbfd = -1;
 static int fbfake = -1;
-static byte *fbmap;
-static byte *data_map;
+static byte* fbmap;
+static byte* data_map;
 static int maplen;
-static byte *mmio;
+static byte* mmio;
 static int bes;
 static int base;
 static int use_yuv = -1;
@@ -51,8 +40,7 @@ static int use_interp = 1;
 static struct fb_fix_screeninfo fi;
 static struct fb_var_screeninfo vi, initial_vi;
 
-rcvar_t vid_exports[] =
-{
+rcvar_t vid_exports[] = {
 	RCV_VECTOR("vmode", &vmode, 3, "video mode: w h bpp"),
 	RCV_STRING("fb_device", &fb_device, "frame buffer device"),
 	RCV_STRING("fb_mode", &fb_mode, "run fbset with the specified mode string"),
@@ -62,28 +50,21 @@ rcvar_t vid_exports[] =
 	RCV_END
 };
 
-
-
-static void wrio4(int a, int v)
-{
+static void wrio4(int a, int v) {
 #ifndef IS_LITTLE_ENDIAN
-	v = (v<<24) | ((v&0xff00)<<8) | ((v&0xff0000)>>8) | (v>>24);
+	v = (v << 24) | ((v & 0xff00) << 8) | ((v & 0xff0000) >> 8) | (v >> 24);
 #endif
-	*(int*)(mmio+a) = v;
+	*(int*)(mmio + a) = v;
 }
 
-static void output_buffer()
-{
+static void output_buffer() {
 	memcpy(fbmap, data_map, maplen);
 }
 
-
-static void overlay_init()
-{
-	if (!mmio | !use_yuv) return;
+static void overlay_init() {
+	if (!mmio || !use_yuv) return;
 	if (use_yuv < 0) if ((vmode[0] < 320) || (vmode[1] < 288)) return;
-	switch (fi.accel)
-	{
+	switch (fi.accel) {
 #ifdef FB_ACCEL_MATROX_MGAG200
 	case FB_ACCEL_MATROX_MGAG200:
 #endif
@@ -104,16 +85,15 @@ static void overlay_init()
 	fb.cc[1].l = 24;
 	fb.cc[2].l = 8;
 	fb.cc[3].l = 16;
-	base = vi.yres * vi.xres_virtual * ((vi.bits_per_pixel+7)>>3);
-	
+	base = vi.yres * vi.xres_virtual * ((vi.bits_per_pixel + 7) >> 3);
+
 	maplen = base + fb.pitch * fb.h;
 }
 
-static void plain_init()
-{
+static void plain_init() {
 	fb.w = vi.xres;
 	fb.h = vi.yres;
-	fb.pelsize = (vi.bits_per_pixel+7)>>3;
+	fb.pelsize = (vi.bits_per_pixel + 7) >> 3;
 	fb.pitch = vi.xres_virtual * fb.pelsize;
 	fb.indexed = fi.visual == FB_VISUAL_PSEUDOCOLOR;
 
@@ -123,12 +103,11 @@ static void plain_init()
 	fb.cc[0].l = vi.red.offset;
 	fb.cc[1].l = vi.green.offset;
 	fb.cc[2].l = vi.blue.offset;
-	
+
 	maplen = fb.pitch * fb.h;
 }
 
-void vid_init()
-{
+void vid_init() {
 	char cmd[256];
 
 	kb_init();
@@ -138,16 +117,15 @@ void vid_init()
 			fb_device = strdup(FB_DEVICE);
 	fbfd = open(fb_device, O_RDWR);
 	if (fbfd < 0) die("cannot open %s\n", fb_device);
-	
+
 	ioctl(fbfd, FBIOGET_VSCREENINFO, &initial_vi);
 	initial_vi.xoffset = initial_vi.yoffset = 0;
 
-	if (fb_mode)
-	{
+	if (fb_mode) {
 		sprintf(cmd, FBSET_CMD " %.80s", fb_mode);
 		system(cmd);
 	}
-	
+
 	ioctl(fbfd, FBIOGET_VSCREENINFO, &vi);
 	if (fb_depth) vi.bits_per_pixel = fb_depth;
 	vi.xoffset = vi.yoffset = 0;
@@ -157,8 +135,7 @@ void vid_init()
 	ioctl(fbfd, FBIOGET_VSCREENINFO, &vi);
 	ioctl(fbfd, FBIOGET_FSCREENINFO, &fi);
 
-	if (!vmode[0] || !vmode[1])
-	{
+	if (!vmode[0] || !vmode[1]) {
 		int scale = rc_getint("scale");
 		if (scale < 1) scale = 1;
 		vmode[0] = 160 * scale;
@@ -166,49 +143,45 @@ void vid_init()
 	}
 	if (vmode[0] > vi.xres) vmode[0] = vi.xres;
 	if (vmode[1] > vi.yres) vmode[1] = vi.yres;
-	
-	mmio = mmap(0, fi.mmio_len, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, fi.smem_len);
+
+	mmio = mmap(0, fi.mmio_len, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, fi.smem_len);
 	if ((long)mmio == -1) mmio = 0;
 
-	//overlay_init();
-	
+	// overlay_init();
+
 	if (!fb.yuv) plain_init();
 
-	fbmap = mmap(0, maplen, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, 0);
-	void* data_map = mmap(0, maplen, PROT_READ | PROT_WRITE, MAP_SHARED, fbfake, 0);
-	
+	fbmap = mmap(0, maplen, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+	data_map = mmap(0, maplen, PROT_READ | PROT_WRITE, MAP_SHARED, fbfake, 0);
+
 	if (!fbmap || !data_map) die("cannot mmap %s (%d bytes)\n", fb_device, maplen);
-	
+
 	fb.ptr = data_map + base;
 	memset(data_map, 0, maplen);
 	fb.dirty = 0;
 	fb.enabled = 1;
 
-	//overlay_switch();
+	// overlay_switch();
 }
 
-void vid_close()
-{
+void vid_close() {
 	fb.enabled = 0;
-	//overlay_switch();
+	// overlay_switch();
 	kb_close();
 	ioctl(fbfd, FBIOPUT_VSCREENINFO, &initial_vi);
 	memset(fbmap, 0, maplen);
 }
 
-void vid_preinit()
-{
+void vid_preinit() {
 }
 
-void vid_settitle(char *title)
-{
+void vid_settitle(char* title) {
 }
 
-void vid_setpal(int i, int r, int g, int b)
-{
-	unsigned short rr = r<<8, gg = g<<8, bb = b<<8;
+void vid_setpal(int i, int r, int g, int b) {
+	unsigned short rr = r << 8, gg = g << 8, bb = b << 8;
 	struct fb_cmap cmap;
-	memset(&cmap, 0, sizeof cmap);
+	memset(&cmap, 0, sizeof(cmap));
 	cmap.start = i;
 	cmap.len = 1;
 	cmap.red = &rr;
@@ -217,20 +190,17 @@ void vid_setpal(int i, int r, int g, int b)
 	ioctl(fbfd, FBIOPUTCMAP, &cmap);
 }
 
-void vid_begin()
-{
-	//overlay_switch();
+void vid_begin() {
+	// overlay_switch();
 }
 
-void vid_end()
-{
+void vid_end() {
 	output_buffer();
-	//overlay_switch();
+	// overlay_switch();
 }
 
-void ev_poll(int wait)
-{
-	(void) wait;
+void ev_poll(int wait) {
+	(void)wait;
 	kb_poll();
 	joy_poll();
 }
