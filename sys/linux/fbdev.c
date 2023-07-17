@@ -215,11 +215,11 @@ static void framebuffer_copy()
 		// 	}
 		// }
 		
-		for (int row = 40; row < 160; row++)
+	for (int row = 60; row < 180; row++)
 		{
-			for (int col = 80; col < 240; col++)
+			for (int b = 0; b < 400*4; b++)
 			{
-				fbmap[(400*row+col)*4] = new_fbmap[(400*row*col)*4];
+				fbmap[(row-60)*(400*4)+b] = new_fbmap[row*(400*4)+b];
 			}
 		}
 		
