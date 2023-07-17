@@ -78,48 +78,6 @@
 	 if (bes) return;
 	 bes = 1;
 	 memset(new_fbmap, 0, maplen);
-	
-	/* color keying (turn it off) */
-	mmio[PALWTADD]  = XKEYOPMODE;
-	mmio[X_DATAREG] = 0;
-	
-	/* src */
-	wrio4(BESA1ORG, base);
-	wrio4(BESA2ORG, base);
-	wrio4(BESB1ORG, base);
-	wrio4(BESB2ORG, base);
-	wrio4(BESPITCH, 320);
-	
-	/* dest */
-	a = (vi.xres - vmode[0])>>1;
-	b = vi.xres - a - 1;
-	wrio4(BESHCOORD,  (a << 16) | (b - 1));
-	
-	/* scale horiz */
-	wrio4(BESHISCAL,   320*131072/(b-a) & 0x001ffffc);
-	wrio4(BESHSRCST,   0 << 16);
-	wrio4(BESHSRCEND,  320 << 16);
-	wrio4(BESHSRCLST,  319 << 16);
-
-	/* dest */
-	a = (vi.yres - vmode[1])>>1;
-	b = vi.yres - a - 1;
-	wrio4(BESVCOORD,  (a << 16) | (b - 1));
-	
-	/* scale vert */
-	wrio4(BESVISCAL,   144*65536/(b-a) & 0x001ffffc);
-	wrio4(BESV1WGHT,   0);
-	wrio4(BESV2WGHT,   0);
-	wrio4(BESV1SRCLST, 143);
-	wrio4(BESV2SRCLST, 143);
-	
-	/* turn on (enable, horizontal+vertical interpolation filters */
-	if (use_interp)
-		wrio4(BESCTL, 0x50c01);
-	else
-		wrio4(BESCTL, 1);
-	wrio4(BESGLOBCTL, 0x83);
-}
 
 static void overlay_init()
 {
