@@ -174,7 +174,7 @@ void vid_init()
 	if (!fb.yuv) plain_init();
 
 	fbmap = mmap(0, maplen, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, 0);
-	data_map = mmap(0, maplen, PROT_READ | PROT_WRITE, MAP_SHARED, fbfake, 0);
+	void* data_map = mmap(0, maplen, PROT_READ | PROT_WRITE, MAP_SHARED, fbfake, 0);
 	
 	if (!fbmap || !data_map) die("cannot mmap %s (%d bytes)\n", fb_device, maplen);
 	
