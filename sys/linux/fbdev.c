@@ -194,35 +194,35 @@ void vid_init()
 
 static void framebuffer_copy()
 	{
-		// Source area
-		int src_width = 160; // Width of the source area
-		int src_height = 120; // Height of the source area
-		int src_x = 80; // X-coordinate of the top-left corner of the source area
-		int src_y = 40; // Y-coordinate of the top-left corner of the source area
+		// // Source area
+		// int src_width = 160; // Width of the source area
+		// int src_height = 120; // Height of the source area
+		// int src_x = 80; // X-coordinate of the top-left corner of the source area
+		// int src_y = 40; // Y-coordinate of the top-left corner of the source area
 	
-		// Destination area
-		int dest_x = 0; // X-coordinate of the top-left corner of the destination area
-		int dest_y = 40; // Y-coordinate of the top-left corner of the destination area
-		int dest_width = src_width * 2; // Width of the destination area (doubled scale)
-		int dest_height = src_height * 2; // Height of the destination area (doubled scale)
-		int pixel_bytes = 4;
+		// // Destination area
+		// int dest_x = 0; // X-coordinate of the top-left corner of the destination area
+		// int dest_y = 40; // Y-coordinate of the top-left corner of the destination area
+		// int dest_width = src_width * 2; // Width of the destination area (doubled scale)
+		// int dest_height = src_height * 2; // Height of the destination area (doubled scale)
+		// int pixel_bytes = 4;
 		
-		for (int y = 0; y < dest_height; y++)
-		{
-			for (int x = 0; x < dest_width*pixel_bytes; x+pixel_bytes)
-			{
-				fbmap[(dest_y + y) * dest_width + x] = new_fbmap[(src_y + y) * src_width + x/2];
-			}
-		}
-		
-		// for (int row = source_y; row < source_y+source_height; row++)
+		// for (int y = 0; y < dest_height; y++)
 		// {
-		// 	for (int b = 0; b < 400*4; b++)
+		// 	for (int x = 0; x < dest_width*pixel_bytes; x+pixel_bytes)
 		// 	{
-		// 		fbmap[(row-60)*(400*4)+b] = new_fbmap[row*(400*4)+b];
-		// 		fbmap[(row-59)*(400*4)+b] = new_fbmap[row*(400*4)+b];
+		// 		fbmap[(dest_y + y) * dest_width + x] = new_fbmap[(src_y + y) * src_width + x/2];
 		// 	}
 		// }
+		
+		for (int row = source_y; row < source_y+source_height; row++)
+		{
+			for (int b = 0; b < 400*4; b++)
+			{
+				fbmap[(row-60)*(400*4)+b] = new_fbmap[row*(400*4)+b];
+				fbmap[(row-59)*(400*4)+b] = new_fbmap[row*(400*4)+b];
+			}
+		}
 		
 	// 	// Source area
 	// 	int src_width = 400; // Width of the source area
