@@ -129,41 +129,23 @@ static void overlay_switch()
 
 static void overlay_init()
 {
-// 	if (!mmio | !use_yuv) return;
-// 	if (use_yuv < 0) if ((vmode[0] < 320) || (vmode[1] < 240)) return;
-// 	switch (fi.accel)
-// 	{
-// #ifdef FB_ACCEL_MATROX_MGAG200
-// 	case FB_ACCEL_MATROX_MGAG200:
-// #endif
-// #ifdef FB_ACCEL_MATROX_MGAG400
-// 	case FB_ACCEL_MATROX_MGAG400:
-// #endif
-// 		break;
-// 	default:
-// 		return;
-// 	}
-// 	fb.w = 160;
-// 	fb.h = 144;
-// 	fb.pitch = 640;
-// 	fb.pelsize = 4;
-// 	fb.yuv = 1;
-// 	fb.cc[0].r = fb.cc[1].r = fb.cc[2].r = fb.cc[3].r = 0;
-// 	fb.cc[0].l = 0;
-// 	fb.cc[1].l = 24;
-// 	fb.cc[2].l = 8;
-// 	fb.cc[3].l = 16;
-// 	base = vi.yres * vi.xres_virtual * ((vi.bits_per_pixel+7)>>3);
-// 	
-// 	maplen = base + fb.pitch * fb.h;
-}
-
-static void plain_init()
-{
-	
-	fb.w = 400; 
-	fb.h = 240; 
-	fb.pitch = 400; 
+	if (!mmio | !use_yuv) return;
+	if (use_yuv < 0) if ((vmode[0] < 320) || (vmode[1] < 288)) return;
+	switch (fi.accel)
+	{
+#ifdef FB_ACCEL_MATROX_MGAG200
+	case FB_ACCEL_MATROX_MGAG200:
+#endif
+#ifdef FB_ACCEL_MATROX_MGAG400
+	case FB_ACCEL_MATROX_MGAG400:
+#endif
+		break;
+	default:
+		return;
+	}
+	fb.w = 160;
+	fb.h = 144;
+	fb.pitch = 640;
 	fb.pelsize = 4;
 	fb.yuv = 1;
 	fb.cc[0].r = fb.cc[1].r = fb.cc[2].r = fb.cc[3].r = 0;
@@ -171,9 +153,27 @@ static void plain_init()
 	fb.cc[1].l = 24;
 	fb.cc[2].l = 8;
 	fb.cc[3].l = 16;
-	base = vi.yres_virtual * ((vi.bits_per_pixel + 7) >> 3);
+	base = vi.yres * vi.xres_virtual * ((vi.bits_per_pixel+7)>>3);
 	
 	maplen = base + fb.pitch * fb.h;
+}
+
+static void plain_init()
+{
+	fb.w = vi.xres;
+	fb.h = vi.yres;
+	fb.pelsize = (vi.bits_per_pixel+7)>>3;
+	fb.pitch = vi.xres_virtual * fb.pelsize;
+	fb.indexed = fi.visual == FB_VISUAL_PSEUDOCOLOR;
+
+	fb.cc[0].r = 8 - vi.red.length;
+	fb.cc[1].r = 8 - vi.green.length;
+	fb.cc[2].r = 8 - vi.blue.length;
+	fb.cc[0].l = vi.red.offset;
+	fb.cc[1].l = vi.green.offset;
+	fb.cc[2].l = vi.blue.offset;
+	
+	maplen = fb.pitch * fb.h;
 }
 
 void vid_init()
@@ -187,7 +187,7 @@ void vid_init()
 			fb_device = strdup(FB_DEVICE);
 	fbfd = open(fb_device, O_RDWR);
 	if (fbfd < 0) die("cannot open %s\n", fb_device);
-
+	
 	ioctl(fbfd, FBIOGET_VSCREENINFO, &initial_vi);
 	initial_vi.xoffset = initial_vi.yoffset = 0;
 
@@ -196,39 +196,36 @@ void vid_init()
 		sprintf(cmd, FBSET_CMD " %.80s", fb_mode);
 		system(cmd);
 	}
-
+	
 	ioctl(fbfd, FBIOGET_VSCREENINFO, &vi);
 	if (fb_depth) vi.bits_per_pixel = fb_depth;
 	vi.xoffset = vi.yoffset = 0;
-	vi.xres *= 2; // Scale the width by 2
-	vi.yres *= 2; // Scale the height by 2
-	vi.xres_virtual = vi.xres;
-	vi.yres_virtual = vi.yres;
+	vi.accel_flags = 0;
 	vi.activate = FB_ACTIVATE_NOW;
 	ioctl(fbfd, FBIOPUT_VSCREENINFO, &vi);
 	ioctl(fbfd, FBIOGET_VSCREENINFO, &vi);
 	ioctl(fbfd, FBIOGET_FSCREENINFO, &fi);
 
-	// if (!vmode[0] || !vmode[1])
-	// {
-	// 	int scale = rc_getint("scale");
-	// 	if (scale < 1) scale = 1;
-	// 	vmode[0] = 160 * scale;
-	// 	vmode[1] = 144 * scale;
-	// }
-	// if (vmode[0] > vi.xres) vmode[0] = vi.xres;
-	// if (vmode[1] > vi.yres) vmode[1] = vi.yres;
-	vmode[0] = vi.xres;
-	vmode[1] = vi.yres;
-
+	if (!vmode[0] || !vmode[1])
+	{
+		int scale = rc_getint("scale");
+		if (scale < 1) scale = 1;
+		vmode[0] = 160 * scale;
+		vmode[1] = 144 * scale;
+	}
+	if (vmode[0] > vi.xres) vmode[0] = vi.xres;
+	if (vmode[1] > vi.yres) vmode[1] = vi.yres;
+	
 	mmio = mmap(0, fi.mmio_len, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, fi.smem_len);
 	if ((long)mmio == -1) mmio = 0;
 
-	plain_init();
+	overlay_init();
+
+	if (!fb.yuv) plain_init();
 
 	fbmap = mmap(0, maplen, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, 0);
 	if (!fbmap) die("cannot mmap %s (%d bytes)\n", fb_device, maplen);
-
+	
 	fb.ptr = fbmap + base;
 	memset(fbmap, 0, maplen);
 	fb.dirty = 0;
@@ -283,6 +280,3 @@ void ev_poll(int wait)
 	kb_poll();
 	joy_poll();
 }
-
-
-
