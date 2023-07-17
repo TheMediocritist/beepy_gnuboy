@@ -194,9 +194,12 @@ void vid_init()
 
 static void framebuffer_copy()
 	{
-			for (int i = 0; i < maplen; i++)
+			for (int row = 0; row < 120; row++)
 			{
-				fbmap[i] = new_fbmap[i];
+				for int b = 0; b < 200*4; b++)
+				{
+					fbmap[row*(400*4)+b] = new_fbmap[row*(200*4)+b];
+				}
 			}
 		
 	// 	// Source area
