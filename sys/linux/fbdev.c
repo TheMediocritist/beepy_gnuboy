@@ -156,7 +156,7 @@ static void overlay_init()
 // 	base = vi.yres * vi.xres_virtual * ((vi.bits_per_pixel+7)>>3);
 // 	
 // 	maplen = base + fb.pitch * fb.h;
-// }
+}
 
 static void plain_init()
 {
