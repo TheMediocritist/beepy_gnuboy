@@ -38,6 +38,7 @@ static int vmode[3];
 static char *fb_device;
 
 static int fbfd = -1;
+static int fbfake = -1;
 static byte *fbmap;
 static int maplen;
 static byte *mmio;
@@ -70,62 +71,11 @@ static void wrio4(int a, int v)
 	*(int*)(mmio+a) = v;
 }
 
-static void overlay_switch()
+static void output_buffer()
 {
-	int a, b;
-	
-	if (!fb.yuv) return;
-	if (!fb.enabled)
-	{
-		if (bes) wrio4(BESCTL, 0);
-		bes = 0;
-		return;
-	}
-	if (bes) return;
-	bes = 1;
-	memset(fbmap, 0, maplen);
-	
-	/* color keying (turn it off) */
-	mmio[PALWTADD]  = XKEYOPMODE;
-	mmio[X_DATAREG] = 0;
-	
-	/* src */
-	wrio4(BESA1ORG, base);
-	wrio4(BESA2ORG, base);
-	wrio4(BESB1ORG, base);
-	wrio4(BESB2ORG, base);
-	wrio4(BESPITCH, 320);
-	
-	/* dest */
-	a = (vi.xres - vmode[0])>>1;
-	b = vi.xres - a - 1;
-	wrio4(BESHCOORD,  (a << 16) | (b - 1));
-	
-	/* scale horiz */
-	wrio4(BESHISCAL,   320*131072/(b-a) & 0x001ffffc);
-	wrio4(BESHSRCST,   0 << 16);
-	wrio4(BESHSRCEND,  320 << 16);
-	wrio4(BESHSRCLST,  319 << 16);
-
-	/* dest */
-	a = (vi.yres - vmode[1])>>1;
-	b = vi.yres - a - 1;
-	wrio4(BESVCOORD,  (a << 16) | (b - 1));
-	
-	/* scale vert */
-	wrio4(BESVISCAL,   144*65536/(b-a) & 0x001ffffc);
-	wrio4(BESV1WGHT,   0);
-	wrio4(BESV2WGHT,   0);
-	wrio4(BESV1SRCLST, 143);
-	wrio4(BESV2SRCLST, 143);
-	
-	/* turn on (enable, horizontal+vertical interpolation filters */
-	if (use_interp)
-		wrio4(BESCTL, 0x50c01);
-	else
-		wrio4(BESCTL, 1);
-	wrio4(BESGLOBCTL, 0x83);
+	memcpy(fbmap, data_map, maplen);
 }
+
 
 static void overlay_init()
 {
@@ -219,15 +169,17 @@ void vid_init()
 	mmio = mmap(0, fi.mmio_len, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, fi.smem_len);
 	if ((long)mmio == -1) mmio = 0;
 
-	overlay_init();
-
+	//overlay_init();
+	
 	if (!fb.yuv) plain_init();
 
 	fbmap = mmap(0, maplen, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, 0);
-	if (!fbmap) die("cannot mmap %s (%d bytes)\n", fb_device, maplen);
+	data_map = mmap(0, maplen, PROT_READ | PROT_WRITE, MAP_SHARED, fbfake, 0);
 	
-	fb.ptr = fbmap + base;
-	memset(fbmap, 0, maplen);
+	if (!fbmap || !data_map) die("cannot mmap %s (%d bytes)\n", fb_device, maplen);
+	
+	fb.ptr = data_map + base;
+	memset(data_map, 0, maplen);
 	fb.dirty = 0;
 	fb.enabled = 1;
 
@@ -271,6 +223,7 @@ void vid_begin()
 
 void vid_end()
 {
+	output_buffer();
 	//overlay_switch();
 }
 
