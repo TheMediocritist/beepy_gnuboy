@@ -189,7 +189,7 @@ void vid_init()
 void vid_close()
 {
 	fb.enabled = 0;
-	overlay_switch();
+	//overlay_switch();
 	kb_close();
 	ioctl(fbfd, FBIOPUT_VSCREENINFO, &initial_vi);
 	memset(fbmap, 0, maplen);
