@@ -195,16 +195,16 @@ void vid_init()
 static void framebuffer_copy()
 	{
 		// Source area
-		int src_width = 160; // Width of the source area
-		int src_height = 120; // Height of the source area
-		int src_x = 120; // X-coordinate of the top-left corner of the source area
-		int src_y = 30; // Y-coordinate of the top-left corner of the source area
+		int src_width = 400; // Width of the source area
+		int src_height = 240; // Height of the source area
+		int src_x = 0; // X-coordinate of the top-left corner of the source area
+		int src_y = 0; // Y-coordinate of the top-left corner of the source area
 	
 		// Destination area
-		int dest_x = 40; // X-coordinate of the top-left corner of the destination area
+		int dest_x = 0; // X-coordinate of the top-left corner of the destination area
 		int dest_y = 0; // Y-coordinate of the top-left corner of the destination area
-		int dest_width = src_width * 2; // Width of the destination area (doubled scale)
-		int dest_height = src_height * 2; // Height of the destination area (doubled scale)
+		int dest_width = src_width;// * 2; // Width of the destination area (doubled scale)
+		int dest_height = src_height;// * 2; // Height of the destination area (doubled scale)
 	
 		// Copy the area from new_fbmap to fbmap with scaling
 		for (int y = 0; y < dest_height; y++)
