@@ -40,6 +40,7 @@ static char *fb_device;
 static int fbfd = -1;
 static int fbfake = -1;
 static byte *fbmap;
+static byte *data_map;
 static int maplen;
 static byte *mmio;
 static int bes;
