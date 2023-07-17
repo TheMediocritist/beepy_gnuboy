@@ -194,9 +194,35 @@ void vid_init()
 
 static void framebuffer_copy()
 	{
-		for (int i = 0; i < maplen; i++)
+		// Source area
+		int src_width = 160; // Width of the source area
+		int src_height = 140; // Height of the source area
+		int src_x = 120; // X-coordinate of the top-left corner of the source area
+		int src_y = 30; // Y-coordinate of the top-left corner of the source area
+	
+		// Destination area
+		int dest_x = 40; // X-coordinate of the top-left corner of the destination area
+		int dest_y = 0; // Y-coordinate of the top-left corner of the destination area
+		int dest_width = src_width * 2; // Width of the destination area (doubled scale)
+		int dest_height = src_height * 2; // Height of the destination area (doubled scale)
+	
+		// Copy the area from new_fbmap to fbmap with scaling
+		for (int y = 0; y < dest_height; y++)
 		{
-			fbmap[i] = new_fbmap[i];
+			for (int x = 0; x < dest_width; x++)
+			{
+				// Calculate the corresponding position in the source area
+				int src_pos_x = (x * src_width) / dest_width + src_x;
+				int src_pos_y = (y * src_height) / dest_height + src_y;
+	
+				// Calculate the corresponding position in the destination area
+				int dest_pos_x = x + dest_x;
+				int dest_pos_y = y + dest_y;
+	
+				// Copy the pixel from the source area to the destination area
+				fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * (vi.bits_per_pixel / 8)] =
+					new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * (vi.bits_per_pixel / 8)];
+			}
 		}
 	}
 
