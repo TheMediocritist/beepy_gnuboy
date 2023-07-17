@@ -71,7 +71,6 @@
 	 if (!fb.yuv) return;
 	 if (!fb.enabled)
 	 {
-		 if (bes) wrio4(BESCTL, 0);
 		 bes = 0;
 		 return;
 	 }
