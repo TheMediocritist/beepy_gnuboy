@@ -217,16 +217,14 @@ static void framebuffer_copy()
 		
 	for (int row = 60; row < 180; row++)
 		{
-			for (int b = 0; b < 640; b++)
+			for (int pix = 0; b < 160; pix++)
 			{
 				int src_x = 480 + b;
-				int dst_x = 160 + b * (2) ; 
-				fbmap[(row-60)*1600 + dst_x] = new_fbmap[row*1600+src_x];
-				fbmap[(row-60)*1600 + dst_x+4] = new_fbmap[row*1600+src_x];
-				//fbmap[(row-59)*2*1600 + dst_x] = new_fbmap[row*1600+src_x];
-				//fbmap[(row-60)*1600 + dst_x] = new_fbmap[row*1600+src_x];
-				//fbmap[(row-60)*1600 + dst_x + 1600] = new_fbmap[row*1600+src_x];
-				//fbmap[(row-60)*3200+b+1600] = new_fbmap[row*1600+b];
+				int dst_x = 160 + b; 
+				for (int b = 0; b < 4; b++)
+				{
+					fbmap[(row-60)*1600 + dst_x + b] = new_fbmap[row*1600+src_x+b];
+				}
 			}
 		}
 		
