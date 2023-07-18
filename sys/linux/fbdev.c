@@ -194,7 +194,6 @@ void vid_init()
 
 static void framebuffer_copy()
 	{
-
 		// Source area
 		int src_width = 160; // Width of the source area
 		int src_height = 120; // Height of the source area
@@ -203,37 +202,39 @@ static void framebuffer_copy()
 	
 		// Destination area
 		int dest_width = src_width * 2; // Width of the destination area
-		int dest_height = src_height * 2;//src_height * 2; // Height of the destination area (doubled scale)
+		int dest_height = src_height * 2; // Height of the destination area (doubled scale)
 	
 		// Calculate the centering offsets for the destination area
 		int dest_x = (vi.xres_virtual - dest_width) / 2;
-		int dest_y = (vi.yres_virtual - dest_height) / 2;// - 40; // Adjust the vertical offset
-		
+		int dest_y = (vi.yres_virtual - dest_height) / 2; // Adjust the vertical offset
+	
 		int dest_pos_x, dest_pos_y, src_pos_x, src_pos_y;
 	
-		// Copy the area from new_fbmap to fbmap with scaling
+		// Copy the area from new_fbmap to fbmap with scaling and custom row mapping
 		for (int y = 0; y < dest_height; y++)
-		{	
-			// Calculate the Y position in destination area
+		{
+			// Calculate the Y position in the destination area
 			dest_pos_y = dest_y + y;
-			
-			// Calculate the corresponding Y position in the source area
-			if ((y % 5) % 2 == 0) 
+	
+			// Determine if the row should be doubled or single based on ((line % 5) % 2)
+			if (((y / 2) % 5) % 2 == 0)
 			{
-				src_pos_y = src_y + (y * 2);
+				// For even rows, copy a single row from the source area
+				src_pos_y = src_y + (y / 2);
 			}
 			else
 			{
-				src_pos_y = src_y + (y * 2) - 1;
+				// For odd rows, duplicate a single row from the source area
+				src_pos_y = src_y + ((y / 2) - 1);
 			}
-			
+	
 			for (int x = 0; x < dest_width; x++)
 			{
 				// Calculate the X position in the destination area
 				dest_pos_x = dest_x + x;
-				
+	
 				// Calculate the corresponding X position in the source area
-				src_pos_x = src_x + (x * 2);
+				src_pos_x = src_x + (x / 2) * 2;
 	
 				// Copy one pixel at a time (4 bytes)
 				memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
@@ -242,6 +243,7 @@ static void framebuffer_copy()
 			}
 		}
 	}
+
 
 	// for (int row = 60; row < 180; row++)
 	// 	{
