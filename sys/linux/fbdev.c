@@ -218,7 +218,7 @@ static void framebuffer_copy()
 			dest_pos_y = dest_y + y;
 	
 			// Determine if the row should be doubled or single based on ((line % 5) % 2)
-			if (((y / 2) % 5) % 2 == 0)
+			if ((y % 5) % 2 == 0)
 			{
 				// For even rows, copy a single row from the source area
 				src_pos_y = src_y + (int) (src_height * (y/dest_height));
