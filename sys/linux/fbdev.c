@@ -186,6 +186,7 @@ void vid_init()
 		fb.ptr = new_fbmap; // Point fb.ptr to the new array
 	
 		memset(new_fbmap, 0, maplen);
+		memset(fbmap, 0, maplen);
 		fb.dirty = 0;
 		fb.enabled = 1;
 	
@@ -236,24 +237,6 @@ static void framebuffer_copy()
 	}
 
 
-
-	// for (int row = 60; row < 180; row++)
-	// 	{
-	// 		for (int pix = 0; pix < 160; pix++)
-	// 		{
-	// 			int src_x = 480 + pix;
-	// 			int dst_x = 160 + pix; 
-	// 			for (int b = 0; b < 4; b++)
-	// 			{
-	// 				fbmap[(row-60)*2*1600 + dst_x*8 + b] = new_fbmap[row*1600+src_x*4+b];
-	// 				fbmap[(row-60)*2*1600 + dst_x*8 + b + 4] = new_fbmap[row*1600+src_x*4+b];
-	// 				fbmap[(row-60)*2*1600 + 1600 + dst_x*8 + b] = new_fbmap[row*1600+src_x*4+b];
-	// 				fbmap[(row-59)*2*1600 + 1600 + dst_x*8 + b + 4] = new_fbmap[row*1600+src_x*4+b];
-	// 			}
-	// 		}
-	// 	}
-		
-
 void vid_close()
 	{
 		fb.enabled = 0;
@@ -292,7 +275,6 @@ void vid_setpal(int i, int r, int g, int b)
 void vid_begin()
 {
 	overlay_switch();
-	//framebuffer_copy();
 }
 
 void vid_end()
