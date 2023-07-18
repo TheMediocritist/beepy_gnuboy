@@ -234,7 +234,7 @@ static void framebuffer_copy()
 				dest_pos_x = dest_x + x;
 	
 				// Calculate the corresponding X position in the source area
-				src_pos_x = src_x + (x / 2) * 2;
+				src_pos_x = src_x + (x / 2);
 	
 				// Copy one pixel at a time (4 bytes)
 				memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
