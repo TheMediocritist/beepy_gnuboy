@@ -217,7 +217,7 @@ static void framebuffer_copy()
 			// Calculate the Y position in the destination area
 			dest_pos_y = dest_y + y;
 			
-			src_pos_y = src_y + (int)((double) y * downsample);
+			src_pos_y = src_y + (int)((double)y * downsample);
 	
 			// Determine if the row should be doubled or single based on ((y % 5) % 2)
 			// if ((y % 5) % 2 != 0)
