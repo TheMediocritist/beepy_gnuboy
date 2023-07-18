@@ -221,12 +221,12 @@ static void framebuffer_copy()
 			if (((y / 2) % 5) % 2 == 0)
 			{
 				// For even rows, copy a single row from the source area
-				src_pos_y = src_y + (int) (src_height * (y/src_height));
+				src_pos_y = (int) (src_height * (y/src_height));
 			}
 			else
 			{
 				// For odd rows, duplicate a single row from the source area
-				src_pos_y = src_y + (int) (src_height * (y/(src_height-1)));
+				src_pos_y = (int) (src_height * (y/(src_height-1)));
 			}
 	
 			for (x = 0; x < dest_width; x++)
