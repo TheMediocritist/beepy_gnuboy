@@ -194,73 +194,57 @@ void vid_init()
 
 static void framebuffer_copy()
 	{
-		// // Source area
-		// int src_width = 160; // Width of the source area
-		// int src_height = 120; // Height of the source area
-		// int src_x = 80; // X-coordinate of the top-left corner of the source area
-		// int src_y = 40; // Y-coordinate of the top-left corner of the source area
+
+	// Source area
+	int src_width = 160; // Width of the source area
+	int src_height = 120; // Height of the source area
+	int src_x = 120; // X-coordinate of the top-left corner of the source area
+	int src_y = 20; // Y-coordinate of the top-left corner of the source area
 	
-		// // Destination area
-		// int dest_x = 0; // X-coordinate of the top-left corner of the destination area
-		// int dest_y = 40; // Y-coordinate of the top-left corner of the destination area
-		// int dest_width = src_width * 2; // Width of the destination area (doubled scale)
-		// int dest_height = src_height * 2; // Height of the destination area (doubled scale)
-		// int pixel_bytes = 4;
-		
-		// for (int y = 0; y < dest_height; y++)
-		// {
-		// 	for (int x = 0; x < dest_width*pixel_bytes; x+pixel_bytes)
-		// 	{
-		// 		fbmap[(dest_y + y) * dest_width + x] = new_fbmap[(src_y + y) * src_width + x/2];
-		// 	}
-		// }
-		
-	for (int row = 60; row < 180; row++)
+	// Destination area
+	int dest_x = 80; // X-coordinate of the top-left corner of the destination area
+	int dest_y = 0; // Y-coordinate of the top-left corner of the destination area
+	int dest_width = src_width * 2; // Width of the destination area
+	int dest_height = src_height * 2; // Height of the destination area (doubled scale)
+	
+	// Copy the area from new_fbmap to fbmap with scaling
+	for (int y = 0; y < dest_height; y++)
+	{
+		for (int x = 0; x < dest_width; x++)
 		{
-			for (int pix = 0; pix < 160; pix++)
-			{
-				int src_x = 480 + pix;
-				int dst_x = 160 + pix; 
-				for (int b = 0; b < 4; b++)
-				{
-					fbmap[(row-60)*2*1600 + dst_x*8 + b] = new_fbmap[row*1600+src_x*4+b];
-					fbmap[(row-60)*2*1600 + dst_x*8 + b + 4] = new_fbmap[row*1600+src_x*4+b];
-					fbmap[(row-60)*2*1600 + 1600 + dst_x*8 + b] = new_fbmap[row*1600+src_x*4+b];
-					fbmap[(row-59)*2*1600 + 1600 + dst_x*8 + b + 4] = new_fbmap[row*1600+src_x*4+b];
-				}
-			}
-		}
+			// Calculate the corresponding position in the source area
+			int src_pos_y = src_y + (y / 2);
+			int src_pos_x = src_x + (x / 2);
 		
-	// 	// Source area
-	// 	int src_width = 400; // Width of the source area
-	// 	int src_height = 240; // Height of the source area
-	// 	int src_x = 0; // X-coordinate of the top-left corner of the source area
-	// 	int src_y = 0; // Y-coordinate of the top-left corner of the source area
-	// 
-	// 	// Destination area
-	// 	int dest_x = 0; // X-coordinate of the top-left corner of the destination area
-	// 	int dest_y = 0; // Y-coordinate of the top-left corner of the destination area
-	// 	int dest_width = src_width;// * 2; // Width of the destination area (doubled scale)
-	// 	int dest_height = src_height;// * 2; // Height of the destination area (doubled scale)
-	// 
-	// 	// Copy the area from new_fbmap to fbmap with scaling
-	// 	for (int y = 0; y < dest_height; y++)
+			// Calculate the corresponding position in the destination area
+			int dest_pos_y = dest_y + y;
+			int dest_pos_x = dest_x + x;
+		
+			// // Copy the entire row at once (two rows at once for vertical scaling)
+			// memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_x) * (vi.bits_per_pixel / 8)],
+			//    	&new_fbmap[(src_pos_y * vi.xres_virtual + src_x) * (vi.bits_per_pixel / 8)],
+			//    	dest_width * (vi.bits_per_pixel / 8));
+			memcpy(&fbmap[(dest_pos_y * 240 + dest_x) * (vi.bits_per_pixel / 8)],
+					&new_fbmap[(src_pos_y * 240 + src_x) * (vi.bits_per_pixel / 8)],
+					4);
+		}
+	}
+	// for (int row = 60; row < 180; row++)
 	// 	{
-	// 		for (int x = 0; x < dest_width*(vi.bits_per_pixel / 8); x++)
+	// 		for (int pix = 0; pix < 160; pix++)
 	// 		{
-	// 			// Calculate the corresponding position in the source area
-	// 			int src_pos_x = (x * src_width) / dest_width + src_x;
-	// 			int src_pos_y = (y * src_height) / dest_height + src_y;
-	// 
-	// 			// Calculate the corresponding position in the destination area
-	// 			int dest_pos_x = x + dest_x;
-	// 			int dest_pos_y = y + dest_y;
-	// 
-	// 			// Copy the pixel from the source area to the destination area
-	// 			fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * (vi.bits_per_pixel / 8)] =
-	// 				new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * (vi.bits_per_pixel / 8)];
+	// 			int src_x = 480 + pix;
+	// 			int dst_x = 160 + pix; 
+	// 			for (int b = 0; b < 4; b++)
+	// 			{
+	// 				fbmap[(row-60)*2*1600 + dst_x*8 + b] = new_fbmap[row*1600+src_x*4+b];
+	// 				fbmap[(row-60)*2*1600 + dst_x*8 + b + 4] = new_fbmap[row*1600+src_x*4+b];
+	// 				fbmap[(row-60)*2*1600 + 1600 + dst_x*8 + b] = new_fbmap[row*1600+src_x*4+b];
+	// 				fbmap[(row-59)*2*1600 + 1600 + dst_x*8 + b + 4] = new_fbmap[row*1600+src_x*4+b];
+	// 			}
 	// 		}
 	// 	}
+		
 	}
 
 void vid_close()
