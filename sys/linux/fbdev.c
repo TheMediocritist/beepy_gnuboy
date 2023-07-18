@@ -197,7 +197,7 @@ static void framebuffer_copy()
 
 		// Source area
 		int src_width = 160; // Width of the source area
-		int src_height = 120; // Height of the source area
+		int src_height = 160; // Height of the source area
 		int src_x = 120; // X-coordinate of the top-left corner of the source area
 		int src_y = 20; // Y-coordinate of the top-left corner of the source area
 	
