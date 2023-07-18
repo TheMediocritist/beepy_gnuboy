@@ -211,24 +211,27 @@ static void framebuffer_copy()
 	
 		// Copy the area from new_fbmap to fbmap with scaling
 		for (int y = 0; y < dest_height; y++)
-		{
+		{	
+			// Calculate the Y position in destination area
+			int dest_pos_y = dest_y + y;
+			
+			// Calculate the corresponding Y position in the source area
+			if ((y % 5) % 2 == 0) 
+			{
+				int src_pos_y = src_y + (y * 2);
+			}
+			else
+			{
+				int src_pos_y = src_y + y;
+			}
+			
 			for (int x = 0; x < dest_width; x++)
 			{
-				// Calculate the corresponding position in the source area
-				if ((x % 5) % 2 == 0) 
-				{
-					int src_pos_y = src_y + (y * 2);
-				}
-				else
-				{
-					int src_pos_y = src_y + y;
-				}
-				int src_pos_x = src_x + (x * 2);
-				//int src_pos_y = src_y + (y * 2);
-	
-				// Calculate the corresponding position in the destination area
+				// Calculate the X position in the destination area
 				int dest_pos_x = dest_x + x;
-				int dest_pos_y = dest_y + y;
+				
+				// Calculate the corresponding X position in the source area
+				int src_pos_x = src_x + (x * 2);
 	
 				// Copy one pixel at a time (4 bytes)
 				memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
