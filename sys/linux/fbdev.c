@@ -221,7 +221,7 @@ static void framebuffer_copy()
 			if (((y / 2) % 5) % 2 == 0)
 			{
 				// For even rows, copy a single row from the source area
-				src_pos_y = src_y + (int) src_height * (dest_height/y));
+				src_pos_y = src_y + (int) (src_height * (dest_height/y));
 			}
 			else
 			{
