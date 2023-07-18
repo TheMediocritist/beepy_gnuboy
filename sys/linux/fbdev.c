@@ -202,7 +202,7 @@ static void framebuffer_copy()
 	int src_y = 20; // Y-coordinate of the top-left corner of the source area
 	
 	// Destination area
-	int dest_x = 80; // X-coordinate of the top-left corner of the destination area
+	int dest_x = 0; // X-coordinate of the top-left corner of the destination area
 	int dest_y = 0; // Y-coordinate of the top-left corner of the destination area
 	int dest_width = src_width * 2; // Width of the destination area
 	int dest_height = src_height * 2; // Height of the destination area (doubled scale)
