@@ -209,9 +209,10 @@ static void framebuffer_copy()
 		int dest_y = (vi.yres_virtual - dest_height) / 2; // Adjust the vertical offset
 	
 		int dest_pos_x, dest_pos_y, src_pos_x, src_pos_y;
+		int x, y = 0;
 	
 		// Copy the area from new_fbmap to fbmap with scaling and custom row mapping
-		for (int y = 0; y < dest_height; y++)
+		for (y = 0; y < dest_height; y++)
 		{
 			// Calculate the Y position in the destination area
 			dest_pos_y = dest_y + y;
@@ -220,15 +221,15 @@ static void framebuffer_copy()
 			if (((y / 2) % 5) % 2 == 0)
 			{
 				// For even rows, copy a single row from the source area
-				src_pos_y = src_y + (y / 2);
+				src_pos_y = src_y + source_height * (dest_height/y);
 			}
 			else
 			{
 				// For odd rows, duplicate a single row from the source area
-				src_pos_y = src_y + ((y / 2) - 1);
+				src_pos_y = src_y + source_height * ((dest_height-1)/y);
 			}
 	
-			for (int x = 0; x < dest_width; x++)
+			for (x = 0; x < dest_width; x++)
 			{
 				// Calculate the X position in the destination area
 				dest_pos_x = dest_x + x;
