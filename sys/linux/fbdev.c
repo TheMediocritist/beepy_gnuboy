@@ -217,7 +217,7 @@ static void framebuffer_copy()
 		
 	for (int row = 60; row < 180; row++)
 		{
-			for (int pix = 0; b < 160; pix++)
+			for (int pix = 0; pix < 160; pix++)
 			{
 				int src_x = 480 + b;
 				int dst_x = 160 + b; 
