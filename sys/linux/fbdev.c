@@ -215,8 +215,16 @@ static void framebuffer_copy()
 			for (int x = 0; x < dest_width; x++)
 			{
 				// Calculate the corresponding position in the source area
-				int src_pos_x = src_x + (x * 4/3);
-				int src_pos_y = src_y + (y * 4/3);
+				if ((x % 5) % 2 == 0) 
+				{
+					int src_pos_y = src_y + (y * 2);
+				}
+				else
+				{
+					int src_pos_y = src_y + 1 + (y * 2);
+				}
+				int src_pos_x = src_x + (x * 2);
+				//int src_pos_y = src_y + (y * 2);
 	
 				// Calculate the corresponding position in the destination area
 				int dest_pos_x = dest_x + x;
