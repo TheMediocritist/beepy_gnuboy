@@ -221,7 +221,7 @@ static void framebuffer_copy()
 				}
 				else
 				{
-					int src_pos_y = src_y + y);
+					int src_pos_y = src_y + y;
 				}
 				int src_pos_x = src_x + (x * 2);
 				//int src_pos_y = src_y + (y * 2);
