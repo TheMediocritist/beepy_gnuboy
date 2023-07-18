@@ -207,7 +207,7 @@ static void framebuffer_copy()
 	
 		// Calculate the centering offsets for the destination area
 		int dest_x = (vi.xres_virtual - dest_width) / 2;
-		int dest_y = (vi.yres_virtual - dest_height) / 2 - 40; // Adjust the vertical offset
+		int dest_y = (vi.yres_virtual - dest_height) / 2 - 60; // Adjust the vertical offset
 	
 		// Copy the area from new_fbmap to fbmap with scaling
 		for (int y = 0; y < dest_height; y++)
