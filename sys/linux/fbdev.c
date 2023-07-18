@@ -223,7 +223,7 @@ static void framebuffer_copy()
 				int dst_x = 160 + pix; 
 				for (int b = 0; b < 4; b++)
 				{
-					fbmap[(row-60)*1600 + dst_x + b] = new_fbmap[row*1600+src_x+b];
+					fbmap[(row-60)*1600 + dst_x*8 + b] = new_fbmap[row*1600+src_x*4+b];
 				}
 			}
 		}
