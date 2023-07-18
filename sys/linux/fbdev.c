@@ -224,7 +224,7 @@ static void framebuffer_copy()
 			// memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_x) * (vi.bits_per_pixel / 8)],
 			//    	&new_fbmap[(src_pos_y * vi.xres_virtual + src_x) * (vi.bits_per_pixel / 8)],
 			//    	dest_width * (vi.bits_per_pixel / 8));
-			memcpy(&fbmap[(dest_pos_y * 240 + dest_x) * (vi.bits_per_pixel / 8)],
+			memcpy(&fbmap[(dest_pos_y * 240 + dest_pos_x) * (vi.bits_per_pixel / 8)],
 					&new_fbmap[(src_pos_y * 240 + src_x) * (vi.bits_per_pixel / 8)],
 					4);
 		}
