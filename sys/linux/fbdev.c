@@ -203,7 +203,7 @@ static void framebuffer_copy()
 	
 		// Destination area
 		int dest_width = src_width * 2; // Width of the destination area
-		int dest_height = 240;//src_height * 2; // Height of the destination area (doubled scale)
+		int dest_height = 320;//src_height * 2; // Height of the destination area (doubled scale)
 	
 		// Calculate the centering offsets for the destination area
 		int dest_x = (vi.xres_virtual - dest_width) / 2;
