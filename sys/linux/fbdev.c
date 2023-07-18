@@ -219,8 +219,8 @@ static void framebuffer_copy()
 		{
 			for (int pix = 0; pix < 160; pix++)
 			{
-				int src_x = 480 + b;
-				int dst_x = 160 + b; 
+				int src_x = 480 + pix;
+				int dst_x = 160 + pix; 
 				for (int b = 0; b < 4; b++)
 				{
 					fbmap[(row-60)*1600 + dst_x + b] = new_fbmap[row*1600+src_x+b];
