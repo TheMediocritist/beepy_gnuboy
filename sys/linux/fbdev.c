@@ -17,6 +17,7 @@
  #include <linux/fb.h>
  #include <sys/ioctl.h>
  #include <fcntl.h>
+ #include <math.h>
  
  #include "defs.h"
  #include "fb.h"
@@ -195,6 +196,12 @@ void vid_init()
 
 static void framebuffer_copy()
 	{
+		// Dithering variables
+		int dith_row;
+		int dith_col;
+		//int dith_matrix = [32, 96, 160, 224]
+		double gray;
+		
 		// Source area
 		int src_width = 160; // Width of the source area
 		int src_height = 144; // Height of the source area
@@ -217,21 +224,65 @@ static void framebuffer_copy()
 		{
 			// Calculate the Y position in the destination area
 			dest_pos_y = dest_y + y;
+			dith_row = dest_pos_y % 2;
+			
+			// double downsample = 1.0;
+			// if (y > 0 && y < dest_height - 1)
+			// {
+			// 	double mid_y = (double)(dest_height - 1) / 2.0;
+			// 	double exponent = (double)abs(y - mid_y) / mid_y;
+			// 	downsample = pow(2.0, exponent);
+			// }
 			
 			src_pos_y = src_y + (int)((double)y * downsample);
-	
-			for (int x = 0; x < dest_width; x++)
+			
+			/ Define the dither matrix
+			int dith_matrix[2][2] = {{0, 2}, {3, 1}};
+			
+			// Create an array to store dithered pixel data
+			byte dithered_pixel[4];
+			
+			for (int y = 0; y < dest_height; y++)
 			{
-				// Calculate the X position in the destination area
-				dest_pos_x = dest_x + x;
-	
-				// Calculate the corresponding X position in the source area
-				src_pos_x = src_x + (x / 2);
-	
-				// Copy one pixel at a time (4 bytes)
-				memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
-					   &new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4],
-					   4);
+				// Calculate the Y position in the destination area
+				dest_pos_y = dest_y + y;
+			
+				// Calculate the corresponding Y position in the source area
+				src_pos_y = src_y + (int)((double)y * downsample);
+			
+				// Calculate the dither matrix row for this destination line
+				dith_row = y % 2;
+			
+				for (int x = 0; x < dest_width; x++)
+				{
+					// Calculate the X position in the destination area
+					dest_pos_x = dest_x + x;
+					dith_col = dest_pos_x % 2;
+			
+					// Calculate the corresponding X position in the source area
+					src_pos_x = src_x + (x / 2);
+			
+					// Calculate the gray value of the source pixel
+					int gray = (new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4] +
+								new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4 + 1] +
+								new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4 + 2]) / 3;
+			
+					// Determine whether to set the pixel to black or white based on dithering
+					int set_to_black = (gray > dith_matrix[dith_row][dith_col]) ? 0 : 1;
+			
+					// Set the first 3 bytes of dithered_pixel array to black or white based on dithering
+					dithered_pixel[0] = set_to_black * 255;
+					dithered_pixel[1] = set_to_black * 255;
+					dithered_pixel[2] = set_to_black * 255;
+			
+					// Copy the last byte (alpha channel) of the pixel from new_fbmap to dithered_pixel
+					dithered_pixel[3] = new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4 + 3];
+			
+					// Copy the dithered pixel data to fbmap
+					memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
+						   dithered_pixel,
+						   4);
+				}
 			}
 		}
 	}
