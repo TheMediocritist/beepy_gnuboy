@@ -217,20 +217,7 @@ static void framebuffer_copy()
 			// Calculate the Y position in the destination area
 			dest_pos_y = dest_y + y;
 			
-			//double downsample = src_height / (double)dest_height : (src_height / (double)(dest_height - 1));
 			src_pos_y = src_y + (int)((double)y * downsample);
-	
-			// Determine if the row should be doubled or single based on ((y % 5) % 2)
-			// if ((y % 5) % 2 != 0)
-			// {
-			// 	// For even rows, copy a single row from the source area
-			// 	src_pos_y = src_y + (int)((double) y * downsample);
-			// }
-			// else
-			// {
-			// 	// For odd rows, duplicate a single row from the source area
-			// 	src_pos_y = src_y + (int)((double)y * (src_height / (double)(dest_height - 1)));
-			// }
 	
 			for (int x = 0; x < dest_width; x++)
 			{
