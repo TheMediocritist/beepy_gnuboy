@@ -17,7 +17,7 @@
  #include <linux/fb.h>
  #include <sys/ioctl.h>
  #include <fcntl.h>
- #inclue <stdint.h>
+ #include <stdint.h>
  
  #include "defs.h"
  #include "fb.h"
@@ -217,15 +217,15 @@ static void framebuffer_copy()
 			for (int x = 0; x < dest_width; x++)
 			{
 				// Get the RGB332 pixel value from new_fbmap
-				u_int8_t rgb332 = new_fbmap[src_pos_y * src_width + src_pos_x];
+				uint8_t rgb332 = new_fbmap[src_pos_y * src_width + src_pos_x];
 				
 				// Extract individual R, G, and B components from RGB332
-				u_int8_t r = (rgb332 >> 5) & 0x07;
-				u_int8_t g = (rgb332 >> 2) & 0x07;
-				u_int8_t b = rgb332 & 0x03;
+				uint8_t r = (rgb332 >> 5) & 0x07;
+				uint8_t g = (rgb332 >> 2) & 0x07;
+				uint8_t b = rgb332 & 0x03;
 				
 				// Calculate grayscale intensity using a weighted average
-				u_int8_t intensity = (r * 30 + g * 59 + b * 11) / 100;
+				uint8_t intensity = (r * 30 + g * 59 + b * 11) / 100;
 				
 				// Calculate the X position in the destination area
 				dest_pos_x = dest_x + x;
