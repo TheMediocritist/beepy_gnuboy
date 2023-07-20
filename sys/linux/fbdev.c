@@ -187,10 +187,12 @@ void vid_init()
 static void framebuffer_copy()
 	{
 		// Source area
+		char black[3] = {0, 0, 0};
+		char white[3] = {255, 255, 255};
 		int src_width = 160; // Width of the source area
 		int src_height = 144; // Height of the source area
-		int src_x = 120; // X-coordinate of the top-left corner of the source area
-		int src_y = 48; // Y-coordinate of the top-left corner of the source area
+		int src_x = 0; // X-coordinate of the top-left corner of the source area
+		int src_y = 0; // Y-coordinate of the top-left corner of the source area
 	
 		// Destination area
 		int dest_width = src_width * 2; // Width of the destination area
@@ -213,16 +215,33 @@ static void framebuffer_copy()
 	
 			for (int x = 0; x < dest_width; x++)
 			{
+				// Get the RGB332 pixel value from new_fbmap
+				uint8_t rgb332 = new_fbmap[src_pos_y * src_width + src_pos_x];
+				
+				// Extract individual R, G, and B components from RGB332
+				uint8_t r = (rgb332 >> 5) & 0x07;
+				uint8_t g = (rgb332 >> 2) & 0x07;
+				uint8_t b = rgb332 & 0x03;
+				
+				// Calculate grayscale intensity using a weighted average
+				uint8_t intensity = (r * 30 + g * 59 + b * 11) / 100;
+				
 				// Calculate the X position in the destination area
 				dest_pos_x = dest_x + x;
 	
 				// Calculate the corresponding X position in the source area
 				src_pos_x = src_x + (x / 2);
+				
+				// Set white (255) or black (0) pixel in fbmap based on intensity
+				//if (intensity > 127) {
+				fbmap[(dest_pos_y * dest_width + dest_pos_x) * 4 + 0] = intensity > 127 ? 255 : 0; // Red component
+				fbmap[(dest_pos_y * dest_width + dest_pos_x) * 4 + 1] = intensity > 127 ? 255 : 0; // Green component
+				fbmap[(dest_pos_y * dest_width + dest_pos_x) * 4 + 2] = intensity > 127 ? 255 : 0; // Blue component
 	
 				// Copy one pixel at a time (4 bytes)
-				memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
-					   &new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4],
-					   4);
+				//memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
+				//	   &new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4],
+				//	   4);
 			}
 		}
 	}
