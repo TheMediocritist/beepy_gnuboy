@@ -187,44 +187,36 @@ static void menu_paint(void) {
 	/* since we use gb's lcd routines to draw to vram, we have to backup
 	   previous palette entries */
 	bkup_pal(&bk);
-	// scan.pal1[0] = 0;
-	// scan.pal1[1] = 0xff;
-	// scan.pal1[2] = 0x66;
-	// scan.pal2[0] = 0;
-	// scan.pal2[1] = 0xffff;
-	// scan.pal2[2] = 0x6666;
-	// scan.pal4[0] = 0;
-	// scan.pal4[1] = 0xffffffff; // alpha left or right ?
-	// scan.pal4[2] = 0x66666666;
-	
+
 	scan.pal1[0] = 0;
 	scan.pal1[1] = 0;
 	scan.pal1[2] = 0;
 	scan.pal2[0] = 0;
 	scan.pal2[1] = 0;
 	scan.pal2[2] = 0;
-	scan.pal4[0] = 0xffffffff;
-	scan.pal4[1] = 0x66666666; // alpha left or right ?
+	scan.pal4[0] = 0xffffffff; // White background
+	scan.pal4[1] = 0x66666666; // Black text color
 	scan.pal4[2] = 0;
 
-	int x,y,l;
-	for(y = 0; y < ezm.h; ++y) {
-		l=strlen(ezm.vislines[y]);
-		for(x = 0; x < ezm.w; ++x)
-			font_blit(screen, x*FONTW, y*FONTH, x>=l?' ':ezm.vislines[y][x], y==ezm.vissel);
+	int x, y, l;
+	for (y = 0; y < ezm.h; ++y) {
+		l = strlen(ezm.vislines[y]);
+		for (x = 0; x < ezm.w; ++x)
+			font_blit(screen, x * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0); // No highlighting (0) for any item
 	}
 
 	vid_begin();
 	lcd_begin();
 
-	for(y = 0; y < 144; ++y) {
-		memcpy(scan.buf, screen+160*y, 160);
+	for (y = 0; y < 144; ++y) {
+		memcpy(scan.buf, screen + 160 * y, 160);
 		lcd_linetovram();
 	}
 
 	vid_end();
 	restore_pal(&bk);
 }
+
 
 static int menu_getevent(int *st) {
 	event_t ev;
