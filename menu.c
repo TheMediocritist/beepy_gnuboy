@@ -187,15 +187,25 @@ static void menu_paint(void) {
 	/* since we use gb's lcd routines to draw to vram, we have to backup
 	   previous palette entries */
 	bkup_pal(&bk);
-	scan.pal1[0] = 0;
-	scan.pal1[1] = 0xff;
-	scan.pal1[2] = 0x66;
+	// scan.pal1[0] = 0;
+	// scan.pal1[1] = 0xff;
+	// scan.pal1[2] = 0x66;
+	// scan.pal2[0] = 0;
+	// scan.pal2[1] = 0xffff;
+	// scan.pal2[2] = 0x6666;
+	// scan.pal4[0] = 0;
+	// scan.pal4[1] = 0xffffffff; // alpha left or right ?
+	// scan.pal4[2] = 0x66666666;
+	
+	scan.pal1[0] = 0xffffffff;
+	scan.pal1[1] = 0;
+	scan.pal1[2] = 0;
 	scan.pal2[0] = 0;
-	scan.pal2[1] = 0xffff;
-	scan.pal2[2] = 0x6666;
+	scan.pal2[1] = 0xffffffff;
+	scan.pal2[2] = 0;
 	scan.pal4[0] = 0;
-	scan.pal4[1] = 0xffffffff; // alpha left or right ?
-	scan.pal4[2] = 0x66666666;
+	scan.pal4[1] = 0; // alpha left or right ?
+	scan.pal4[2] = 0xffffffff;
 
 	int x,y,l;
 	for(y = 0; y < ezm.h; ++y) {

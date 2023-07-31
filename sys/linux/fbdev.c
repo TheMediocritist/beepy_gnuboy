@@ -186,6 +186,8 @@ void vid_init()
 		fb.ptr = new_fbmap; // Point fb.ptr to the new array
 	
 		memset(new_fbmap, 0, maplen);
+		memset(fbmap, 0, maplen);
+		
 		fb.dirty = 0;
 		fb.enabled = 1;
 	
