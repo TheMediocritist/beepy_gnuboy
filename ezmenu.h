@@ -87,33 +87,13 @@ static void ezmenu_setfooter(struct ezmenu *m, char* ftr) {
 #ifndef MAX
 #define MAX(a, b) (((a) > (b)) ? (a) : (b))
 #endif
-// static void ezmenu_update(struct ezmenu *m) {
-// 	int start = (!!m->header)*2, end = m->h - (!!m->footer)*2;
-// 	int vis = end - start;
-// 	int y, ly = MAX(0, m->sel - vis/2);
-// 	m->vissel = (m->sel-ly)+(!!m->header)*2;
-// 	for(y = start; y < end; ++y) {
-// 		m->vislines[y] = ly>=m->linecount?"":m->lines[ly++];
-// 	}
-// }
-
 static void ezmenu_update(struct ezmenu *m) {
-	int start = (!!m->header) * 2, end = m->h - (!!m->footer) * 2;
+	int start = (!!m->header)*2, end = m->h - (!!m->footer)*2;
 	int vis = end - start;
-	int y, ly = MAX(0, m->sel - vis / 2);
-	m->vissel = (m->sel - ly) + (!!m->header) * 2;
-	for (y = start; y < end; ++y) {
-		m->vislines[y] = ly >= m->linecount ? "" : m->lines[ly++];
-		if (y == m->vissel) {
-			char* prefix = "> ";
-			char* item = m->vislines[y];
-			char* prefixed_item = malloc(strlen(prefix) + strlen(item) + 1);
-			if (prefixed_item) {
-				strcpy(prefixed_item, prefix);
-				strcat(prefixed_item, item);
-				m->vislines[y] = prefixed_item;
-			}
-		}
+	int y, ly = MAX(0, m->sel - vis/2);
+	m->vissel = (m->sel-ly)+(!!m->header)*2;
+	for(y = start; y < end; ++y) {
+		m->vislines[y] = ly>=m->linecount?"":m->lines[ly++];
 	}
 }
 
@@ -133,4 +113,4 @@ static void ezmenu_userinput(struct ezmenu *m, enum ezmenu_input inp) {
 			m->sel = m->linecount-1;
 	}
 	ezmenu_update(m);
-}
+} 
