@@ -205,7 +205,7 @@ static void menu_paint(void) {
 	scan.pal2[2] = 0;
 	scan.pal4[0] = 0;
 	scan.pal4[1] = 0; // alpha left or right ?
-	scan.pal4[2] = 0;
+	scan.pal4[2] = 0xffffffff;
 
 	int x,y,l;
 	for(y = 0; y < ezm.h; ++y) {
