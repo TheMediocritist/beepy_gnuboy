@@ -90,7 +90,7 @@ void menu_initpage(enum menu_page page) {
 	switch(page) {
 	case mp_savestate:
 	case mp_loadstate:
-		ezmenu_setheader(&ezm, page == mp_savestate ? "Save state" : "Load state");
+		ezmenu_setheader(&ezm, page == mp_savestate ? "SAVE STATE" : "LOAD STATE");
 		ezmenu_setlines(&ezm, (void*)state_menu_items, sizeof(state_menu_items)/sizeof(main_menu_items[0]));
 		ezmenu_setfooter(&ezm, " ");
 		break;
@@ -100,12 +100,12 @@ void menu_initpage(enum menu_page page) {
 		ezmenu_setlines(&ezm, (void*)loaderr_menu_items, 1);
 		break;
 	case mp_main:
-		ezmenu_setheader(&ezm, "Beepboy Main Menu");
+		ezmenu_setheader(&ezm, "BEEPBOY MAIN MENU");
 		ezmenu_setlines(&ezm, (void*)main_menu_items, sizeof(main_menu_items)/sizeof(main_menu_items[0]));
 		ezmenu_setfooter(&ezm, " ");
 		break;
 	case mp_controller:
-		ezmenu_setheader(&ezm, "Controller config");
+		ezmenu_setheader(&ezm, "CONTROLLER CONFIG");
 		ezmenu_setlines(&ezm, controller_menu_items, sizeof(controller_menu_items)/sizeof(controller_menu_items[0]));
 		ezmenu_setfooter(&ezm, " ");
 		break;
@@ -118,7 +118,7 @@ void menu_initpage(enum menu_page page) {
 			page = mp_loaderr;
 			goto loaderr;
 		}
-		ezmenu_setheader(&ezm, "Beepboy ROM Selection");
+		ezmenu_setheader(&ezm, "BEEPBOY ROM SELECTION");
 		ezmenu_setfooter(&ezm, " ");
 		dirlist = malloc(sizeof(char*));
 		dirlist[0] = strdup("..");
