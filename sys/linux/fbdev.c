@@ -97,8 +97,8 @@ static void overlay_init()
 	}
 	fb.w = 160;
 	fb.h = 144;
-	fb.pitch = 160;
-	fb.pelsize = 1;
+	fb.pitch = 640;
+	fb.pelsize = 4;
 	fb.yuv = 1;
 	fb.cc[0].r = fb.cc[1].r = fb.cc[2].r = fb.cc[3].r = 0;
 	fb.cc[0].l = 0;
@@ -112,15 +112,18 @@ static void overlay_init()
 
 static void plain_init()
 {
-	fb.w = 160;
-	fb.h = 144;
-	fb.pelsize = 1;
-	fb.pitch = 160 * fb.pelsize;
-	//fb.indexed = fi.visual == FB_VISUAL_PSEUDOCOLOR;
+	fb.w = vi.xres;
+	fb.h = vi.yres;
+	fb.pelsize = (vi.bits_per_pixel+7)>>3;
+	fb.pitch = vi.xres_virtual * fb.pelsize;
+	fb.indexed = fi.visual == FB_VISUAL_PSEUDOCOLOR;
 
-	fb.indexed = 1;
-	fb.cc[0].r = fb.cc[1].r = fb.cc[2].r = 8;
-	fb.cc[0].l = fb.cc[1].l = fb.cc[2].l = 0;
+	fb.cc[0].r = 8 - vi.red.length;
+	fb.cc[1].r = 8 - vi.green.length;
+	fb.cc[2].r = 8 - vi.blue.length;
+	fb.cc[0].l = vi.red.offset;
+	fb.cc[1].l = vi.green.offset;
+	fb.cc[2].l = vi.blue.offset;
 	
 	maplen = fb.pitch * fb.h;
 }
@@ -155,33 +158,38 @@ void vid_init()
 	ioctl(fbfd, FBIOGET_VSCREENINFO, &vi);
 	ioctl(fbfd, FBIOGET_FSCREENINFO, &fi);
 
-	vmode[0] = 160;
-    	vmode[1] = 144;
-    	vmode[2] = 8;
+	if (!vmode[0] || !vmode[1])
+	{
+		int scale = rc_getint("scale");
+		if (scale < 1) scale = 1;
+		vmode[0] = 160 * scale;
+		vmode[1] = 144 * scale;
+	}
+	if (vmode[0] > vi.xres) vmode[0] = vi.xres;
+	if (vmode[1] > vi.yres) vmode[1] = vi.yres;
 	
 	mmio = mmap(0, fi.mmio_len, PROT_READ|PROT_WRITE, MAP_SHARED, fbfd, fi.smem_len);
 	if ((long)mmio == -1) mmio = 0;
 
 	overlay_init();
 	
-	if (!fb.yuv) plain_init();
-
-	// Allocate memory for the new array
-	maplen = base + fb.pitch * fb.h;
-	new_fbmap = (byte *)malloc(maplen);
-	if (!new_fbmap) die("cannot allocate memory for new_fbmap\n");
-
-	fbmap = mmap(0, maplen, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
-	if (!fbmap) die("cannot mmap %s (%d bytes)\n", fb_device, maplen);
-
-	fb.ptr = new_fbmap; // Point fb.ptr to the new array
-
-	memset(new_fbmap, 0, maplen);
-	memset(fbmap, 0, maplen);
-	fb.dirty = 0;
-	fb.enabled = 1;
-
-	overlay_switch();
+		if (!fb.yuv) plain_init();
+	
+		// Allocate memory for the new array
+		maplen = base + fb.pitch * fb.h;
+		new_fbmap = (byte *)malloc(maplen);
+		if (!new_fbmap) die("cannot allocate memory for new_fbmap\n");
+	
+		fbmap = mmap(0, maplen, PROT_READ | PROT_WRITE, MAP_SHARED, fbfd, 0);
+		if (!fbmap) die("cannot mmap %s (%d bytes)\n", fb_device, maplen);
+	
+		fb.ptr = new_fbmap; // Point fb.ptr to the new array
+	
+		memset(new_fbmap, 0, maplen);
+		fb.dirty = 0;
+		fb.enabled = 1;
+	
+		overlay_switch();
 	}
 
 static void framebuffer_copy()
@@ -194,7 +202,7 @@ static void framebuffer_copy()
 	
 		// Destination area
 		int dest_width = src_width * 2; // Width of the destination area
-		int dest_height = 240; // Height of the destination area (doubled scale)
+		int dest_height = src_height * 2; // Height of the destination area (doubled scale)
 	
 		// Calculate the centering offsets for the destination area
 		int dest_x = (vi.xres_virtual - dest_width) / 2;
@@ -226,7 +234,6 @@ static void framebuffer_copy()
 			}
 		}
 	}
-
 
 void vid_close()
 	{
@@ -266,6 +273,7 @@ void vid_setpal(int i, int r, int g, int b)
 void vid_begin()
 {
 	overlay_switch();
+	//framebuffer_copy();
 }
 
 void vid_end()
