@@ -16,10 +16,8 @@
 #include "fb.h"
 #include "lcd.h"
 
-// #define FONTW 5
-// #define FONTH 7
-#define FONTW 7
-#define FONTH 9
+#define FONTW 5
+#define FONTH 7
 #define FONTMAX 127
 
 static char *romdir;
@@ -67,13 +65,13 @@ static char* controller_menu_items[] = {
 void menu_initpage(enum menu_page page) {
 	static const char* loaderr_menu_items[] = {"back"};
 	static const char* main_menu_items[] = {
-		"continue",
-		"select rom",
-		"load state",
-		"save state",
-		"controller config",
-		"reset",
-		"quit",
+		"CONTINUE",
+		"SELECT ROM",
+		"LOAD STATE",
+		"SAVE STATE",
+		"CONTROLLER CONFIG",
+		"RESET",
+		"QUIT",
 	};
 	static const char* state_menu_items[] = {
 		"state 0", "state 1", "state 2", "state 3", "state 4",
@@ -199,10 +197,10 @@ static void menu_paint(void) {
 	// scan.pal4[1] = 0xffffffff; // alpha left or right ?
 	// scan.pal4[2] = 0x66666666;
 	
-	scan.pal1[0] = 0xff;
-	scan.pal1[1] = 0xff;
-	scan.pal1[2] = 0xff;
-	scan.pal2[0] = 0xffff;
+	scan.pal1[0] = 0;
+	scan.pal1[1] = 0;
+	scan.pal1[2] = 0;
+	scan.pal2[0] = 0;
 	scan.pal2[1] = 0;
 	scan.pal2[2] = 0;
 	scan.pal4[0] = 0xffffffff;
