@@ -144,13 +144,17 @@ void menu_initpage(enum menu_page page) {
 }
 
 static void font_blit(unsigned char* screen, int dx, int dy, int ch, int hl) {
-	unsigned char* dest = screen + dy*160 + dx;
-	unsigned const char* font = font5x7 + (ch>FONTMAX?0:ch)*FONTH*FONTW;
-	int x,y;
-	for(y = 0; y < FONTH; ++y, dest += 160)
-		for(x = 0; x < FONTW; ++x)
-			dest[x] = hl&&!font[y*FONTW+x]?2:font[y*FONTW+x];
+	unsigned char* dest = screen + dy * 160 + dx;
+	unsigned const char* font = font5x7 + (ch > FONTMAX ? 0 : ch) * FONTH * FONTW;
+	int x, y;
+	for (y = 0; y < FONTH; ++y, dest += 160) {
+		for (x = 0; x < FONTW; ++x) {
+			dest[x] = hl && !font[y * FONTW + x] ? 2 : font[y * FONTW + x];
+		}
+	}
 }
+
+
 
 struct palbkup {
 	char pal1[3];
@@ -201,8 +205,16 @@ static void menu_paint(void) {
 	int x, y, l;
 	for (y = 0; y < ezm.h; ++y) {
 		l = strlen(ezm.vislines[y]);
-		for (x = 0; x < ezm.w; ++x)
-			font_blit(screen, x * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0); // No highlighting (0) for any item
+		for (x = 0; x < ezm.w; ++x) {
+			if (y == ezm.vissel) {
+				if (x == 0) {
+					font_blit(screen, x * FONTW, y * FONTH, '>', 0); // Draw the '>' character
+				}
+				font_blit(screen, (x + 1) * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
+			} else {
+				font_blit(screen, x * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
+			}
+		}
 	}
 
 	vid_begin();
@@ -216,7 +228,6 @@ static void menu_paint(void) {
 	vid_end();
 	restore_pal(&bk);
 }
-
 
 static int menu_getevent(int *st) {
 	event_t ev;
