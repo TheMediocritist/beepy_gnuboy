@@ -17,7 +17,6 @@
  #include <linux/fb.h>
  #include <sys/ioctl.h>
  #include <fcntl.h>
- #inclue <stdint.h>
  
  #include "defs.h"
  #include "fb.h"
