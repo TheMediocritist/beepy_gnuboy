@@ -201,11 +201,11 @@ static void menu_paint(void) {
 	scan.pal1[1] = 0;
 	scan.pal1[2] = 0;
 	scan.pal2[0] = 0;
-	scan.pal2[1] = 0xffffffff;
+	scan.pal2[1] = 0;
 	scan.pal2[2] = 0;
 	scan.pal4[0] = 0;
 	scan.pal4[1] = 0; // alpha left or right ?
-	scan.pal4[2] = 0xffffffff;
+	scan.pal4[2] = 0;
 
 	int x,y,l;
 	for(y = 0; y < ezm.h; ++y) {
