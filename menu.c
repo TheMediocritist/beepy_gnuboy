@@ -16,8 +16,10 @@
 #include "fb.h"
 #include "lcd.h"
 
-#define FONTW 5
-#define FONTH 7
+// #define FONTW 5
+// #define FONTH 7
+#define FONTW 7
+#define FONTH 9
 #define FONTMAX 127
 
 static char *romdir;
@@ -201,7 +203,7 @@ static void menu_paint(void) {
 	scan.pal1[1] = 0xff;
 	scan.pal1[2] = 0xff;
 	scan.pal2[0] = 0xffff;
-	scan.pal2[1] = 0xffff;
+	scan.pal2[1] = 0;
 	scan.pal2[2] = 0;
 	scan.pal4[0] = 0xffffffff;
 	scan.pal4[1] = 0; // alpha left or right ?
