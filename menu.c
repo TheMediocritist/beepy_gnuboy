@@ -204,7 +204,7 @@ static void menu_paint(void) {
 	scan.pal2[1] = 0;
 	scan.pal2[2] = 0;
 	scan.pal4[0] = 0xffffffff;
-	scan.pal4[1] = 0; // alpha left or right ?
+	scan.pal4[1] = 0x66666666; // alpha left or right ?
 	scan.pal4[2] = 0;
 
 	int x,y,l;
