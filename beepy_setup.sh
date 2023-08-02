@@ -7,7 +7,7 @@ cd beepy_gnuboy
 make || { echo "Error: Failed to compile."; exit 1; }
 
 echo "Installing binary and config file"
-cp fbgnuboy 
+cp fbgnuboy /usr/local/bin
 mkdir ~/.gnuboy
 cp gnuboy.rc ~/.gnuboy/gnuboy.rc
 
