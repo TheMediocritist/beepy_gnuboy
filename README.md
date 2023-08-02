@@ -12,7 +12,12 @@ To install on Beepy:
 curl -s https://raw.githubusercontent.com/TheMediocritist/beepy_gnuboy/master/beepy_setup.sh | bash
 ```
 
-GNUBOY 1.0.4 README
+
+
+
+
+
+## GNUBOY 1.0.4 README
 
 Welcome to gnuboy, one of the fastest if not the fastest GB/GBC emu-
 lator available.
