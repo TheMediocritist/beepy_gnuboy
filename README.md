@@ -1,3 +1,17 @@
+# Beepboy 
+
+gnuboy port for Beepy.
+Currently:
+* Scales original 160 x 144 display to 320 x 240
+
+To do:
+* Implement Bayer 2x2 dithering for grayscales
+
+To install on Beepy:
+```
+curl -s https://raw.githubusercontent.com/TheMediocritist/beepy_gnuboy/master/beepy_setup.sh | bash
+```
+
 GNUBOY 1.0.4 README
 
 Welcome to gnuboy, one of the fastest if not the fastest GB/GBC emu-
