@@ -63,7 +63,7 @@ static char* controller_menu_items[] = {
 };
 
 void menu_initpage(enum menu_page page) {
-	static const char* loaderr_menu_items[] = {"back"};
+	static const char* loaderr_menu_items[] = {"BACK"};
 	static const char* main_menu_items[] = {
 		"CONTINUE",
 		"SELECT ROM",
@@ -204,7 +204,7 @@ static void menu_paint(void) {
 
 	int x, y, l;
 	for (y = 0; y < ezm.h; ++y) {
-		l = strlen(ezm.vislines[y]);
+		l = strlen(ezm.vislines[y]) - 3;
 		for (x = 0; x < ezm.w; ++x) {
 			if (y == ezm.vissel) {
 				if (x == 0) {
