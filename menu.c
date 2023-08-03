@@ -208,7 +208,7 @@ static void menu_paint(void) {
 		for (x = 0; x < ezm.w; ++x) {
 			if (y == 0) {
 				font_blit(screen, x * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
-			{
+			}
 			else if (y == ezm.vissel) {
 				if (x == 0) {
 					font_blit(screen, x * FONTW, y * FONTH, ' ', 0); // Draw the '>' character
