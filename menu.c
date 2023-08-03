@@ -204,7 +204,7 @@ static void menu_paint(void) {
 
 	int x, y, l;
 	for (y = 0; y < ezm.h; ++y) {
-		l = strlen(ezm.vislines[y]) + 2;
+		l = strlen(ezm.vislines[y]);
 		for (x = 0; x < ezm.w; ++x) {
 			if (y == ezm.vissel) {
 				if (x == 0) {
@@ -214,10 +214,10 @@ static void menu_paint(void) {
 					font_blit(screen, x * FONTW, y * FONTH, '>', 0); // Draw the '_' character
 				}
 				else {
-					font_blit(screen, (x + 1) * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x-2], 0);
+					font_blit(screen, (x + 1) * FONTW, y * FONTH, x >= (l + 2) ? ' ' : ezm.vislines[y][x-2], 0);
 				}
 			} else {
-				font_blit(screen, (x + 1) * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x-2], 0);
+				font_blit(screen, (x + 1) * FONTW, y * FONTH, x >= (l + 2) ? ' ' : ezm.vislines[y][x-2], 0);
 			}
 		}
 	}
