@@ -206,7 +206,10 @@ static void menu_paint(void) {
 	for (y = 0; y < ezm.h; ++y) {
 		l = strlen(ezm.vislines[y]);
 		for (x = 0; x < ezm.w; ++x) {
-			if (y == ezm.vissel) {
+			if (y == 0) {
+				font_blit(screen, x * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
+			{
+			else if (y == ezm.vissel) {
 				if (x == 0) {
 					font_blit(screen, x * FONTW, y * FONTH, ' ', 0); // Draw the '>' character
 				}
@@ -328,32 +331,32 @@ entry:;
 					goto out;
 				}
 			} else if (currpage == mp_main) {
-				if(!strcmp(ezm.vislines[ezm.vissel], "continue")) {
+				if(!strcmp(ezm.vislines[ezm.vissel], "CONTINUE")) {
 					if(emu_paused()) goto out;
 				}
-				else if(!strcmp(ezm.vislines[ezm.vissel], "reset")) {
+				else if(!strcmp(ezm.vislines[ezm.vissel], "RESET")) {
 					if(emu_paused()) {
 						emu_reset();
 						goto out;
 					}
 				}
-				else if(!strcmp(ezm.vislines[ezm.vissel], "select rom")) {
+				else if(!strcmp(ezm.vislines[ezm.vissel], "SELECT ROM")) {
 					menu_initpage(mp_romsel);
 					goto entry;
 				}
-				else if(!strcmp(ezm.vislines[ezm.vissel], "controller config")) {
+				else if(!strcmp(ezm.vislines[ezm.vissel], "CONTROLLER CONFIG")) {
 					menu_initpage(mp_controller);
 					goto entry;
 				}
-				else if(!strcmp(ezm.vislines[ezm.vissel], "load state")) {
+				else if(!strcmp(ezm.vislines[ezm.vissel], "LOAD STATE")) {
 					menu_initpage(mp_loadstate);
 					goto entry;
 				}
-				else if(!strcmp(ezm.vislines[ezm.vissel], "save state")) {
+				else if(!strcmp(ezm.vislines[ezm.vissel], "SAVE STATE")) {
 					menu_initpage(mp_savestate);
 					goto entry;
 				}
-				else if(!strcmp(ezm.vislines[ezm.vissel], "quit")) {
+				else if(!strcmp(ezm.vislines[ezm.vissel], "QUIT")) {
 					loader_unload();
 					exit(0);
 				}
@@ -361,7 +364,7 @@ entry:;
 				menu_initpage(mp_romsel);
 				goto entry;
 			} else if (currpage == mp_controller) {
-				if(!strcmp(ezm.vislines[ezm.vissel], "back")) {
+				if(!strcmp(ezm.vislines[ezm.vissel], "BACK")) {
 					menu_initpage(mp_main);
 					goto entry;
 				}
@@ -376,7 +379,7 @@ entry:;
 				ezmenu_update(&ezm);
 				menu_paint();
 			} else if (currpage == mp_savestate || currpage == mp_loadstate) {
-				if(!strcmp(ezm.vislines[ezm.vissel], "back")) {
+				if(!strcmp(ezm.vislines[ezm.vissel], "BACK")) {
 					menu_initpage(mp_main);
 					goto entry;
 				}
