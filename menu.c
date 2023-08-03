@@ -212,7 +212,7 @@ static void menu_paint(void) {
 				}
 				else if (x == 1) {
 					font_blit(screen, x * FONTW, y * FONTH, '>', 0); // Draw the '>' character
-				{
+				}
 				font_blit(screen, (x + 2) * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
 			} else {
 				font_blit(screen, (x + 2) * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
