@@ -204,7 +204,7 @@ static void menu_paint(void) {
 
 	int x, y, l;
 	for (y = 0; y < ezm.h; ++y) {
-		l = strlen(ezm.vislines[y]);
+		l = strlen(ezm.vislines[y]) + 2;
 		for (x = 0; x < ezm.w; ++x) {
 			if (y == ezm.vissel) {
 				if (x == 0) {
