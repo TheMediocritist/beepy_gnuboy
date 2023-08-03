@@ -211,13 +211,13 @@ static void menu_paint(void) {
 					font_blit(screen, x * FONTW, y * FONTH, '>', 0); // Draw the '>' character
 				}
 				else if (x == 1) {
-					font_blit(screen, x * FONTW, y * FONTH, '_', 0); // Draw the '_' character
+					font_blit(screen, (x + 1) * FONTW, y * FONTH, '_', 0); // Draw the '_' character
 				}
 				else {
 					font_blit(screen, (x + 2) * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
 				}
 			} else {
-				font_blit(screen, (x + 2) * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
+				font_blit(screen, (x + 3) * FONTW, y * FONTH, x >= l ? ' ' : ezm.vislines[y][x], 0);
 			}
 		}
 	}
