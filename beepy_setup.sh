@@ -11,6 +11,3 @@ echo "Installing binary and config file"
 sudo cp fbgnuboy /usr/local/bin
 mkdir ~/.gnuboy
 cp gnuboy.rc ~/.gnuboy/gnuboy.rc
-
-echo "Loading..."
-fbgnuboy
