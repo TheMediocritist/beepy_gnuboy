@@ -231,8 +231,8 @@ static void framebuffer_copy()
 	
 				// Copy one pixel at a time (4 bytes)
 				memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
-					   &new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4],
-					   4);
+					   &new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x)],
+					   1);
 			}
 		}
 	}
