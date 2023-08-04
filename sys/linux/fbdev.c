@@ -30,7 +30,7 @@
  static int fb_depth;
  static int vmode[3];
  
- #define FB_DEVICE "/dev/fb0"
+ #define FB_DEVICE "/dev/fb1"
  static char *fb_device;
  
  static int fbfd = -1;
