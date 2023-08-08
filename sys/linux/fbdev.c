@@ -114,7 +114,7 @@ static void plain_init()
 {
 	fb.w = vi.xres;
 	fb.h = vi.yres;
-	fb.pelsize = (vi.bits_per_pixel+7)>>3;
+	fb.pelsize = 1;
 	fb.pitch = vi.xres_virtual * fb.pelsize;
 	fb.indexed = fi.visual == FB_VISUAL_PSEUDOCOLOR;
 
@@ -221,19 +221,20 @@ static void framebuffer_copy()
 			
 			src_pos_y = src_y + (int)((double)y * downsample);
 	
-			for (int x = 0; x < dest_width; x++)
-			{
-				// Calculate the X position in the destination area
-				dest_pos_x = dest_x + x;
-	
-				// Calculate the corresponding X position in the source area
-				src_pos_x = src_x + (x / 2);
-	
-				// Copy one pixel at a time (4 bytes)
-				memcpy(&fbmap[(dest_pos_y * vi.xres_virtual + dest_pos_x) * 4],
-					   &new_fbmap[(src_pos_y * vi.xres_virtual + src_pos_x) * 4],
-					   2);
-			}
+			// Copy the area from new_fbmap to fbmap with scaling and custom row mapping
+			    for (int y = 0; y < dest_height; y++) {
+			        dest_pos_y = dest_y + y;
+			        src_pos_y = src_y + (int)((double)y * downsample);
+			
+			        for (int x = 0; x < dest_width; x++) {
+			            dest_pos_x = dest_x + x;
+			            src_pos_x = src_x + (x / 2);
+			
+			            // Copy one pixel at a time (1 byte)
+			            fbmap[dest_pos_y * vi.xres_virtual + dest_pos_x] =
+			                new_fbmap[src_pos_y * vi.xres_virtual + src_pos_x];
+			        }
+			    }
 		}
 	}
 
