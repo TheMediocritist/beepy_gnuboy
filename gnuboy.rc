@@ -25,23 +25,19 @@ bind d +right
 bind - "set framelen 16743"
 bind + "set framelen 0"
 
-# Set video mode to 400x300x16bpp
+# Set video mode to 400x240x8bpp
 set vmode 160 144 8
 
-# Enable full 2x screen scaling
+# Enable 2x screen scaling
 # This will not work if your video mode is smaller than 320x288!
-set scale 2
-#set density 1
-#set vmode 400 240 32
+# set scale 2
 
 # Enable stereo sound. Doesn't work on all systems
-#set stereo true
+# set stereo true
 
 # toggle sound on or off when m is pressed.
 bind m "toggle sound"
 
-
 # Use Beepy framebuffer
 set fb_device /dev/fb1
-#set fb_mode 400x240
 set FULLSCREEN VIDEO
